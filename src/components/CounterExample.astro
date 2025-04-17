@@ -1,4 +1,8 @@
-<div id="root" class="flex justify-between items-center"></div>
+<div
+  id="root"
+  class="flex justify-center items-center p-4 border-1 border-[var(--ec-brdCol)] bg-[var(--ec-frm-edBg)]"
+>
+</div>
 
 <script>
   import { html, mount, signal } from "@hellajs/core";
@@ -11,8 +15,8 @@
   const setCount = (change: number) => count.set(count() + change);
 
   const styles = {
-    button: tw`mt-4 rounded bg-[var(--sl-color-text-accent)] py-2 px-4 border border-transparent text-center text-sm text-[var(--sl-color-text-invert)] font-semibold active:transition-transform active:scale-90`,
-    count: tw`mt-4 text-xl font-bold bg-slate-600 px-4 py-1.5 rounded-full text-white`,
+    button: tw`mx-6 rounded bg-[var(--sl-color-text-accent)] py-2 px-4 border border-transparent text-center text-sm text-[var(--sl-color-text-invert)] font-semibold active:transition-transform active:scale-90`,
+    count: tw`text-xl font-bold bg-slate-600 px-4 py-1.5 rounded-full text-white`,
   };
 
   const btn = (set: number, label: string) =>

@@ -1,13 +1,21 @@
 import { html, mount, signal } from "@hellajs/core";
 
-const { div, button } = html;
+// Ergonomic element proxies
+const { div, button, span } = html;
 
+// Create reactive state OUTSIDE component functions
 const count = signal(0);
 
-const Counter = () => div(
-  button({ onclick: () => count.set(count() - 1) }, "-"),
-  count(),
-  button({ onclick: () => count.set(count() + 1) }, "+"),
-);
+// Update reactive state OUTSIDE component functions
+const setCount = (changeBy) => count.set(count() + changeBy);
 
-mount(Counter);
+// Define component functions that use signals
+const Counter = () =>
+  div(
+    button({ onclick: () => setCount(-1) }, "-"),
+    span(count()),
+    button({ onclick: () => setCount(+1) }, "+"),
+  );
+
+// Mount reactive components
+mount(Counter, "#app");
