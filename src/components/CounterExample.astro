@@ -4,10 +4,10 @@ import { Code } from "@astrojs/starlight/components";
 import importedCounter from "./counter?raw";
 ---
 
-<p class="text-xl mb-4 mt-8 font-bold">Example</p>
+<h2 class="text-xl mb-4 mt-8 font-bold">Example</h2>
 <Code code={importedCounter} lang="js" />
 
-<p class="text-xl mt-8 font-bold">Output</p>
+<h2 class="text-xl mt-8 font-bold">Output</h2>
 <div id="root" class="flex justify-between items-center"></div>
 
 <script>
@@ -21,7 +21,7 @@ import importedCounter from "./counter?raw";
   const setCount = (change: number) => count.set(count() + change);
 
   const styles = {
-    button: tw`rounded bg-[var(--sl-color-text-accent)] py-2 px-4 border border-transparent text-center text-sm text-[var(--sl-color-text-invert)] font-semibold`,
+    button: tw`rounded bg-[var(--sl-color-text-accent)] py-2 px-4 border border-transparent text-center text-sm text-[var(--sl-color-text-invert)] font-semibold active:transition-transform active:scale-95`,
     count: tw`text-xl font-bold bg-slate-600 px-4 py-1.5 rounded text-white`,
   };
 
