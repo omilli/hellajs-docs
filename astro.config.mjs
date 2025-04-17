@@ -12,7 +12,7 @@ export default defineConfig({
 			customCss: ['./src/styles/global.css'],
 			sidebar: [
 				{
-					label: 'Overview',
+					label: 'Quick Start',
 					link: '/',
 				},
 				// {
@@ -24,8 +24,8 @@ export default defineConfig({
 				// 	],
 				// },
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'API',
+					autogenerate: { directory: 'api' },
 				},
 			],
 		}),
