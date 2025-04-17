@@ -1,14 +1,14 @@
 ---
-import { Code, Card } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
 
 import importedCounter from "./counter?raw";
 ---
 
-<Card title="Simple Yet Powerful" icon="seti:html">
-  <Code code={importedCounter} title={"counter.ts"} lang="js" />
-  <p class="text-xl mt-8">Counter Example</p>
-  <div id="counter-example" class="flex justify-between items-center"></div>
-</Card>
+<p class="text-xl mb-4 mt-8 font-bold">Example</p>
+<Code code={importedCounter} lang="js" />
+
+<p class="text-xl mt-8 font-bold">Output</p>
+<div id="root" class="flex justify-between items-center"></div>
 
 <script>
   import { html, mount, signal } from "@hellajs/core";
@@ -46,5 +46,5 @@ import importedCounter from "./counter?raw";
       btn(+1, "Increment"),
     );
 
-  mount(Counter, "#counter-example");
+  mount(Counter);
 </script>

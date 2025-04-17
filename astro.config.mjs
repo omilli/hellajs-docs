@@ -15,14 +15,14 @@ export default defineConfig({
 					label: 'Home',
 					link: '/',
 				},
-				{
-					label: 'Learn',
-					items: [
-						{ label: 'Quick Start', slug: 'guides/quick-start' },
-						{ label: 'Concepts', slug: 'guides/concepts' },
-						{ label: 'Tutorial', slug: 'guides/todo-tutorial' },
-					],
-				},
+				// {
+				// 	label: 'Learn',
+				// 	items: [
+				// 		{ label: 'Quick Start', slug: 'guides/quick-start' },
+				// 		{ label: 'Concepts', slug: 'guides/concepts' },
+				// 		{ label: 'Tutorial', slug: 'guides/todo-tutorial' },
+				// 	],
+				// },
 				{
 					label: 'Reference',
 					autogenerate: { directory: 'reference' },
