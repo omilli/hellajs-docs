@@ -12,7 +12,7 @@ export default defineConfig({
 			customCss: ['./src/styles/global.css'],
 			sidebar: [
 				{
-					label: 'Home',
+					label: 'Overview',
 					link: '/',
 				},
 				// {

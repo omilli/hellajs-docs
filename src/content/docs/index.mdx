@@ -1,24 +1,37 @@
 ---
-title: HellaJS
+title: Overview
 description: A lightweight reactive UI library with fine-grained reactivity and virtual DOM diffing.
 template: doc
-tableOfContents: false
 ---
 
-<p>A lightweight reactive UI library.</p>
+import { Code, Icon } from "@astrojs/starlight/components";
+import CounterExample from "../../components/CounterExample.astro"
+import importedCounter from "../../components/counter?raw";
+
+
+A lightweight reactive UI library.
 
 ![Static Badge](https://img.shields.io/badge/status-experimental-orange.svg)
 
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@hellajs/core)](https://bundlephobia.com/package/@hellajs/core)
 
-<div class="mt-8">
-<h2 class="text-xl font-bold">Installation</h2>
+## Installation
 ```bash
 npm install @hellajs/core
 ```
-</div>
 
+## Counter Example
 
-import CounterExample from "../../components/CounterExample.astro"
+<Code code={importedCounter} lang="js" />
 
 <CounterExample/>
+
+## Links
+
+<div class="flex gap-2 items-center ml-8">
+  <Icon name="github" /> <a href="https://github.com/omilli/hellajs)">Github</a>
+</div>
+
+<div class="flex gap-2 items-center ml-8">
+  <Icon name="npm" /> <a href="https://www.npmjs.com/package/@hellajs/core">NPM</a>
+</div>
