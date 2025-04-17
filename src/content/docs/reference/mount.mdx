@@ -1,0 +1,79 @@
+---
+title: mount
+description: Connects component functions to the DOM with automatic reactive updates.
+---
+
+```typescript
+type MountConfig = {
+  // CSS selector where the component will be mounted. Defaults to `#root`.
+  root?: string;
+  // Context to use. Defaults to the result of `getDefaultContext()`.
+  context?: Context;
+  // Called once before the component is initially mounted.
+  onBeforeMount?: () => void;
+  // Called once after the component is initially mounted.
+  onMounted?: () => void;
+  // Called before the component updates due to reactive changes.
+  onBeforeUpdate?: () => void;
+  // Called after the component updates due to reactive changes.
+  onUpdated?: () => void;
+  // Called before the component is unmounted.
+  onBeforeUnmount?: () => void;
+  // Called after the component is unmounted and resources are cleaned up.
+  onUnmounted?: () => void;
+};
+
+/**
+ * @param vNodeFn - A function that returns the root VNode of the component to mount.
+ * @param args - Optional configuration object or a string representing the root selector.
+ * @returns A function that, when called, unmounts the component and cleans up reactivity and events.
+ */
+
+mount( vNodeFn: () => VNode, args?: MountConfig | string): () => void
+```
+
+Connects a component function to the DOM with reactive updates.
+It automatically updates the DOM when reactive dependencies change
+and uses an efficient diffing algorithm for updates.
+
+## Basic Usage
+
+```typescript
+import { html, mount, signal } from "@hellajs/core";
+const { div, h1, button } = html;
+
+// Create reactive state
+const count = signal(0);
+
+// Define a component function
+const Counter = () =>
+  div(
+    h1(`Count: ${count()}`),
+    button({ onclick: () => count.set(count() + 1) }, "Increment"),
+  );
+
+// Mount the component to the DOM
+mount(Counter, "#app");
+```
+
+## Memoization & Cleanup Example
+
+```typescript
+import { signal, computed, html, mount } from '@hellajs/core';
+const { ul, li } = html;
+
+const items = signal(['Apple', 'Banana', 'Cherry']);
+
+// Wrap complex elements with computed for memoization
+const ItemList = computed(() => 
+  ul(
+    ...items().map(item => li(item))
+  )
+);
+
+// Use the memoized component in the mount function
+const unmount = mount(() => ItemList(), '#app');
+//...
+// Later, clean up everything
+unmount();
+```

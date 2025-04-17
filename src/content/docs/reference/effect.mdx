@@ -1,0 +1,67 @@
+---
+title: effect
+description: Creates reactive side effects that automatically run when dependencies change.
+---
+
+```typescript
+/**
+  * @param fn - The function to execute when dependencies change
+  * @param context An optional context, uses the default context if not provided.
+  * @returns A cleanupfunction that can be called to clean up the effect
+ */
+effect(fn: EffectFn, context?: Context): EffectFn
+
+```
+
+Creates reactive side effects that automatically track their dependencies and re-run whenever those dependencies change.
+It supports nested effects with automatic cleanup and returns a function to manually stop the effect and release resources.
+
+
+## Basic Usage
+
+```typescript
+import { signal, effect } from '@hellajs/core';
+
+const count = signal(0);
+
+// Creates an effect that runs when count changes
+const cleanup = effect(() => {
+  console.log(`The count is: ${count()}`);
+});
+
+// Logs: "The count is: 0" (initial run)
+count.set(1);
+// Logs: "The count is: 1"
+
+// Stop the effect from running
+cleanup();
+
+// No longer logs anything
+count.set(2);
+```
+
+### Multiple Dependency Example
+
+```typescript
+import { signal, effect } from '@hellajs/core';
+
+const x = signal(1);
+const y = signal(2);
+const z = signal(3);
+
+effect(() => {
+  console.log(`Sum: ${x() + y() + z()}`);
+});
+
+// Logs: "Sum: 6"
+
+x.set(10);
+// Logs: "Sum: 15"
+
+batch(() => {
+  x.set(5);
+  y.set(5);
+  z.set(5);
+});
+// Logs: "Sum: 15" (once)
+```

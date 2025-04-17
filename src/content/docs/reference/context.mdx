@@ -1,0 +1,53 @@
+---
+title: context
+description: Provides isolated environments for state and DOM operations
+---
+
+```typescript
+/**
+ * @param id - Optional ID for new context. If not provided, a unique ID will be generated.
+ * @returns A new Context object with initialized reactive state management and DOM utilities.
+ */
+context(id?:string): Context
+
+```
+
+The context system provides isolated environments for managing application state and performing operations.
+Each context includes its own reactive state management, DOM utilities, event handling, rendering functions, and a cleanup mechanism to release associated resources.
+
+
+## Basic Usage
+
+```typescript
+import { context } from '@hellajs/core';
+
+// Operations in one context don't affect the other
+const ctx1 = context('first');
+const ctx2 = context('second');
+// ...
+// Clean up when no longer needed
+ctx1.cleanup();
+ctx2.cleanup();
+```
+
+### Isolated Context Example
+
+```typescript
+// Create a context
+const ctx = context('feature');
+
+// Use context-specific reactivity
+const count = ctx.signal(0);
+const doubled = ctx.computed(() => count() * 2);
+
+// Create an effect within this context
+ctx.effect(() => {
+  console.log(`Count is now: ${count()}, doubled: ${doubled()}`);
+});
+
+// Updates are isolated to this context
+count.set(5);
+
+// Cleanup when done
+ctx.cleanup();
+```

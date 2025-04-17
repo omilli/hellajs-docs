@@ -1,0 +1,53 @@
+---
+title: signal
+description: Creates reactive state values that trigger updates when changed.
+---
+
+```typescript
+/**
+ * @param initialValue The initial value for the signal
+ * @param context An optional context, uses the default context if not provided
+ * @returns A signal function that can be called to get or set the value
+ */
+signal<T>(initialValue: T, context?: Context): Signal<T>
+```
+
+The core primitive for reactive state in HellaJS.
+It creates a container for a value that can be read and updated, automatically triggering reactive effects when the value changes.
+
+## Basic Usage
+
+```typescript
+import { signal } from '@hellajs/core';
+
+// Create a signal with an initial value
+const count = signal(0);
+
+// Read the current value
+console.log(count()); // 0
+
+// Update the value
+count.set(5);
+console.log(count()); // 5
+
+// Alternative way to update
+count(10);
+console.log(count()); // 10
+```
+
+## Component Example
+
+```typescript
+import { signal, html, mount } from '@hellajs/core';
+const { div, button, p } = html;
+
+const count = signal(0);
+
+const Counter = () => div(
+  p(`Count: ${count()}`),
+  button({ onclick: () => count.set(count() + 1) }, 'Increment'),
+  button({ onclick: () => count.set(count() - 1) }, 'Decrement')
+);
+
+mount(Counter, '#app');
+```

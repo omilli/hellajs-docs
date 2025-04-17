@@ -1,0 +1,50 @@
+---
+import { Code, Card } from "@astrojs/starlight/components";
+
+import importedCounter from "./counter?raw";
+---
+
+<Card title="Simple Yet Powerful" icon="seti:html">
+  <Code code={importedCounter} title={"counter.ts"} lang="js" />
+  <p class="text-xl mt-8">Counter Example</p>
+  <div id="counter-example" class="flex justify-between items-center"></div>
+</Card>
+
+<script>
+  import { html, mount, signal } from "@hellajs/core";
+  import { tw } from "../tw";
+
+  const { $, button, span } = html;
+
+  const count = signal(0);
+
+  const setCount = (change: number) => count.set(count() + change);
+
+  const styles = {
+    button: tw`rounded bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white hover:bg-blue-700`,
+    count: tw`text-xl font-bold bg-slate-600 px-4 py-1.5 rounded`,
+  };
+
+  const btn = (set: number, label: string) =>
+    button(
+      {
+        className: styles.button,
+        onclick: () => setCount(set),
+      },
+      label,
+    );
+
+  const Counter = () =>
+    $(
+      btn(-1, "Decrement"),
+      span(
+        {
+          className: styles.count,
+        },
+        count(),
+      ),
+      btn(+1, "Increment"),
+    );
+
+  mount(Counter, "#counter-example");
+</script>

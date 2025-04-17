@@ -1,0 +1,67 @@
+---
+title: batch
+description: Prevents multiple effects by grouping multiple signal updates.
+---
+
+Prevents multiple effects from running by grouping multiple signal updates into a single function.
+This is particularly useful when you want to update multiple signals at once without triggering reactivity for each individual update.
+
+```typescript
+/**
+ * @param fn A function that contains the signals to be batched.
+ * @param context An optional context, uses the default context if not provided.
+ * @returns The result of the function.
+ */
+batch<T>(fn: () => T, context?: Context): T
+
+```
+
+## Basic Usage
+
+```typescript
+import { signal, effect, batch } from '@hellajs/core';
+
+const width = signal(100);
+const height = signal(50);
+const area = computed(() => width() * height());
+
+effect(() => {
+  console.log(`Area: ${area()}`);
+});
+
+// Update multiple related values at once
+batch(() => {
+  width.set(200);
+  height.set(100);
+});
+// Logs "Area: 20000" once rather than multiple times
+```
+
+## Form Example
+
+```typescript
+import { signal, batch } from '@hellajs/core';
+
+const formData = {
+  username: signal(''),
+  email: signal(''),
+  isSubmitting: signal(false),
+  isSuccess: signal(false)
+};
+
+function submitForm() {
+  batch(() => {
+    formData.isSubmitting.set(true);
+    
+    // Simulate asynchronous form submission
+    setTimeout(() => {
+      batch(() => {
+        formData.isSubmitting.set(false);
+        formData.isSuccess.set(true);
+        formData.username.set('');
+        formData.email.set('');
+      });
+    }, 1000);
+  });
+}
+```

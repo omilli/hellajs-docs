@@ -2,18 +2,25 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
-// https://astro.build/config
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: 'HellaJS',
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/omilli/hellajs' }],
+			customCss: ['./src/styles/global.css'],
 			sidebar: [
 				{
-					label: 'Guides',
+					label: 'Home',
+					link: '/',
+				},
+				{
+					label: 'Learn',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
+						{ label: 'Quick Start', slug: 'guides/quick-start' },
+						{ label: 'Concepts', slug: 'guides/concepts' },
+						{ label: 'Tutorial', slug: 'guides/todo-tutorial' },
 					],
 				},
 				{
@@ -23,4 +30,8 @@ export default defineConfig({
 			],
 		}),
 	],
+
+	vite: {
+		plugins: [tailwindcss()],
+	},
 });
