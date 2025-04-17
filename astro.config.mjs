@@ -24,7 +24,7 @@ export default defineConfig({
 				// 	],
 				// },
 				{
-					label: 'API',
+					label: 'API (0.3.0)',
 					autogenerate: { directory: 'api' },
 				},
 			],
