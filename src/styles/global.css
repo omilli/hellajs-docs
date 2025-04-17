@@ -61,9 +61,9 @@
   --sl-color-red: hsl(var(--sl-hue-red), 82%, 63%);
   --sl-color-red-high: hsl(var(--sl-hue-red), 82%, 87%);
 
-  --sl-color-accent-low: oklch(28.2% 0.091 267.935);
-  --sl-color-accent: oklch(48.8% 0.243 264.376);
-  --sl-color-accent-high: oklch(70.7% 0.165 254.624);
+  --sl-color-accent-low: oklch(29.3% 0.066 243.157);
+  --sl-color-accent: oklch(58.8% 0.158 241.966);
+  --sl-color-accent-high: oklch(82.8% 0.111 230.318);
 
   --sl-color-text: var(--sl-color-gray-2);
   --sl-color-text-accent: var(--sl-color-accent-high);
@@ -156,15 +156,25 @@
 :root[data-theme='light'],
 [data-theme='light'] ::backdrop {
   /* Colours (light mode) */
+  /* Map to Tailwind Slate palette (Light Mode) */
   --sl-color-white: hsl(224, 10%, 10%);
-  --sl-color-gray-1: hsl(224, 14%, 16%);
-  --sl-color-gray-2: hsl(224, 10%, 23%);
-  --sl-color-gray-3: hsl(224, 7%, 36%);
-  --sl-color-gray-4: hsl(224, 6%, 56%);
-  --sl-color-gray-5: hsl(224, 6%, 77%);
-  --sl-color-gray-6: hsl(224, 20%, 94%);
-  --sl-color-gray-7: hsl(224, 19%, 97%);
-  --sl-color-black: hsl(0, 0%, 100%);
+  /* white */
+  --sl-color-gray-1: hsl(222.2 47.4% 11.2%);
+  /* slate-900 - Used for text */
+  --sl-color-gray-2: hsl(222.2 47.4% 19.8%);
+  /* slate-800 */
+  --sl-color-gray-3: hsl(222.2 47.4% 31.2%);
+  /* slate-700 */
+  --sl-color-gray-4: hsl(222.2 47.4% 56.3%);
+  /* slate-500 */
+  --sl-color-gray-5: hsl(222.2 47.4% 71.8%);
+  /* slate-400 */
+  --sl-color-gray-6: hsl(222.2 47.4% 84.7%);
+  /* slate-300 - Used for inline code bg, hairlines */
+  --sl-color-gray-7: hsl(222.2 47.4% 90.8%);
+  /* slate-200 - Used for nav bg */
+  --sl-color-black: hsl(222.2 47.4% 96.3%);
+  /* slate-100 - Used for main bg */
 
   --sl-color-orange-high: hsl(var(--sl-hue-orange), 80%, 25%);
   --sl-color-orange: hsl(var(--sl-hue-orange), 90%, 60%);
@@ -182,9 +192,9 @@
   --sl-color-red: hsl(var(--sl-hue-red), 90%, 60%);
   --sl-color-red-low: hsl(var(--sl-hue-red), 80%, 90%);
 
-  --sl-color-accent-high: hsl(234, 80%, 30%);
-  --sl-color-accent: hsl(234, 90%, 60%);
-  --sl-color-accent-low: hsl(234, 88%, 90%);
+  --sl-color-accent-high: oklch(29.3% 0.066 243.157);
+  --sl-color-accent: oklch(58.8% 0.158 241.966);
+  --sl-color-accent-low: oklch(82.8% 0.111 230.318);
 
   --sl-color-text-accent: var(--sl-color-accent);
   --sl-color-text-invert: var(--sl-color-black);
