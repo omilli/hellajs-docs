@@ -18,7 +18,6 @@ export default defineConfig({
 				// {
 				// 	label: 'Learn',
 				// 	items: [
-				// 		{ label: 'Quick Start', slug: 'guides/quick-start' },
 				// 		{ label: 'Concepts', slug: 'guides/concepts' },
 				// 		{ label: 'Tutorial', slug: 'guides/todo-tutorial' },
 				// 	],
