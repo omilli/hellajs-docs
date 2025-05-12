@@ -8,7 +8,7 @@ Provides a simple way to create virtual DOM elements using functions named after
 It supports setting attributes and properties, nesting children, using fragments, and automatically handling arrays of child elements.
 
 
-## Basic Usage
+## Example
 
 ```typescript
 import { html } from '@hellajs/core';
@@ -29,47 +29,5 @@ const form = div(
       e.preventDefault();
     }
   }, 'Submit')
-);
-```
-
-## Fragments
-
-Fragments allow you to group multiple elements without creating an unnecessary wrapper element in the DOM. This is useful when:
-
-- You need to return multiple elements from a component
-- You want to avoid adding extra divs to the DOM structure
-- You're inserting elements into a parent where only specific children are valid (like `<tr>` in a `<table>`)
-
-```typescript
-import { html } from '@hellajs/core';
-const { div, h1, p, $ } = html;
-
-const isAuthenticated = true;
-const username = 'John';
-
-// Conditionally render multiple elements without a wrapper
-const authContent = isAuthenticated
-  ? $(h1(`Welcome back, ${username}!`))
-  : $(p('Authentication required to continue.'));
-
-// Use inside another element without unnecessary nesting
-const app = div(authContent);
-```
-
-## Dynamic Children Example
-
-```typescript
-import { html } from '@hellajs/core';
-const { ul, li, span } = html;
-
-const items = ['Apple', 'Banana', 'Cherry'];
-
-// Generate elements from data
-const list = ul(
-  items.map(item => 
-    li(
-      span({ className: 'item-name' }, item)
-    )
-  )
 );
 ```

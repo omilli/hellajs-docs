@@ -5,15 +5,15 @@ description: Prevents tracking signal dependencies within a function call.
 
 ```typescript
 /**
- * @param fn The function to execute without tracking signal dependencies
+ * @param callback The function to execute without tracking signal dependencies
  * @returns The result of the function execution
  */
-untracked<T>(fn: () => T): T
+untracked<T>(callback: () => T): T
 ```
 
 Allows you to access signal values without creating dependencies. It's useful when you need to read a signal's value within an effect or computed value without causing that effect to re-run when the signal changes.
 
-## Basic Usage
+## Example
 
 ```typescript
 import { signal, effect, untracked } from '@hellajs/core';
@@ -39,26 +39,3 @@ count.set(1);
 threshold.set(20);
 // Effect doesn't run, since threshold was read via untracked
 ```
-
-## Conditional Tracking Example
-
-```typescript
-import { signal, computed, untracked } from '@hellajs/core';
-
-const items = signal([1, 2, 3, 4]);
-const config = signal({ shouldFilter: true, threshold: 3 });
-
-const filteredItems = computed(() => {
-  const list = items();
-  
-  // Only track config.shouldFilter, not the whole config object
-  const shouldFilter = config().shouldFilter;
-  
-  if (shouldFilter) {
-    // Don't track threshold changes
-    const threshold = untracked(() => config().threshold);
-    return list.filter(item => item <= threshold);
-  }
-  
-  return list;
-});

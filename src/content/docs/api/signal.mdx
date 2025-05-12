@@ -5,17 +5,16 @@ description: Creates reactive state values that trigger updates when changed.
 
 ```typescript
 /**
- * @param initialValue The initial value for the signal
- * @param context An optional context, uses the default context if not provided
+ * @param initial The initial value for the signal
  * @returns A signal function that can be called to get or set the value
  */
-signal<T>(initialValue: T, context?: Context): Signal<T>
+signal<T>(initial: T): Signal<T>
 ```
 
 The core primitive for reactive state in HellaJS.
 It creates a container for a value that can be read and updated, automatically triggering reactive effects when the value changes.
 
-## Basic Usage
+## Example
 
 ```typescript
 import { signal } from '@hellajs/core';
@@ -33,21 +32,4 @@ console.log(count()); // 5
 // Alternative way to update
 count(10);
 console.log(count()); // 10
-```
-
-## Component Example
-
-```typescript
-import { signal, html, mount } from '@hellajs/core';
-const { div, button, p } = html;
-
-const count = signal(0);
-
-const Counter = () => div(
-  p(`Count: ${count()}`),
-  button({ onclick: () => count.set(count() + 1) }, 'Increment'),
-  button({ onclick: () => count.set(count() - 1) }, 'Decrement')
-);
-
-mount(Counter, '#app');
 ```

@@ -3,41 +3,18 @@ title: batch
 description: Prevents multiple effects by grouping multiple signal updates.
 ---
 
-Prevents multiple effects from running by grouping multiple signal updates into a single function.
-This is particularly useful when you want to update multiple signals at once without triggering reactivity for each individual update.
-
 ```typescript
 /**
- * @param fn A function that contains the signals to be batched.
- * @param context An optional context, uses the default context if not provided.
+ * @param callback A function that contains the signals to be batched.
  * @returns The result of the function.
  */
-batch<T>(fn: () => T, context?: Context): T
+batch<T>(callback: () => T): T
 
 ```
 
-## Basic Usage
+Prevents multiple effects from running by grouping multiple signal updates into a single function. Useful when you want to update multiple signals at once without triggering reactivity for each individual update.
 
-```typescript
-import { signal, effect, batch } from '@hellajs/core';
-
-const width = signal(100);
-const height = signal(50);
-const area = computed(() => width() * height());
-
-effect(() => {
-  console.log(`Area: ${area()}`);
-});
-
-// Update multiple related values at once
-batch(() => {
-  width.set(200);
-  height.set(100);
-});
-// Logs "Area: 20000" once rather than multiple times
-```
-
-## Form Example
+## Example
 
 ```typescript
 import { signal, batch } from '@hellajs/core';

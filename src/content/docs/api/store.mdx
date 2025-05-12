@@ -1,0 +1,46 @@
+---
+title: store
+description: A deeply reactive store for managing application state.
+---
+
+
+```typescript
+/**
+ * @param initial The initial value for the store
+ * @returns A store object with reactive properties and methods
+ */
+
+store<T extends object = {}>(initial: T): Store<T>
+```
+
+A deeply reactive store for managing application state. It allows you to create a nested structure of signals, where each property can be a signal or another store. The store provides methods to set and update values, as well as a computed method to derive values from the store's state.
+
+## Example
+
+```typescript
+import { store } from '@hellajs/core';
+
+const userStore = store({
+  name: 'John Doe',
+  age: 30,
+  address: {
+    street: '123 Main St',
+    city: 'New York',
+  },
+});
+const user = userStore.computed();
+console.log(user);
+// { name: 'John Doe', age: 30, address: { street: '123 Main St', city: 'New York' } }
+
+userStore.update({
+  address: {
+    city: 'San Francisco',
+  },
+});
+console.log(userStore.address.city());
+// 'San Francisco'
+
+userStore.address.street.set('789 Oak St');
+console.log(userStore.address.street());
+// '789 Oak St'
+```

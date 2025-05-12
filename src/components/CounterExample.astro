@@ -1,14 +1,14 @@
 <div
-  id="root"
+  id="app"
   class="flex justify-center items-center p-4 border-1 border-[var(--ec-brdCol)] bg-[var(--ec-frm-edBg)]"
 >
 </div>
 
 <script>
-  import { html, mount, signal } from "@hellajs/core";
+  import { html, render, signal } from "@hellajs/core";
   import { tw } from "../tw";
 
-  const { $, button, span } = html;
+  const { div, button, span } = html;
 
   const count = signal(0);
 
@@ -22,23 +22,17 @@
   const btn = (set: number, label: string) =>
     button(
       {
-        className: styles.button,
+        class: styles.button,
         onclick: () => setCount(set),
       },
       label,
     );
 
-  const Counter = () =>
-    $(
-      btn(-1, "Decrement"),
-      span(
-        {
-          className: styles.count,
-        },
-        count(),
-      ),
-      btn(+1, "Increment"),
-    );
+  const Counter = div(
+    btn(-1, "Decrement"),
+    span({ class: styles.count }, count),
+    btn(+1, "Increment"),
+  );
 
-  mount(Counter);
+  render(Counter);
 </script>

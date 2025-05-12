@@ -5,50 +5,14 @@ description: Creates derived state that automatically updates when dependencies 
 
 ```typescript
 /**
- * @param fn A function that computes a derived value from all internal signals
+ * @param compute A function that computes a derived value from all internal signals
  * @returns A read-only signal value that updates when any of the dependencies change.
  */
-computed<T>(fn: fn<T>): SignalValue<T>
+computed<T>(compute: () => T): SignalValue<T>
 ```
-Creates a read-only signal derived from internal signals and automatically tracks it's dependencies.
-It caches the result until any of the dependencies change, and only recalculates when the value is used.
+Creates a read-only signal derived from internal signals and automatically tracks it's dependencies. Caches the result until any of the dependencies change, and only recalculates when the value is used.
 
-## Basic Usage
-
-```typescript
-import { signal, computed } from '@hellajs/core';
-
-const width = signal(5);
-const height = signal(10);
-
-const area = computed(() => width() * height());
-const perimeter = computed(() => 2 * (width() + height()));
-
-console.log(area()); // 50
-console.log(perimeter()); // 30
-
-width.set(7);
-console.log(area()); // 70
-```
-
-## Nested Computes
-
-```typescript
-import { signal, computed } from '@hellajs/core';
-
-const basePrice = signal(100);
-const taxRate = signal(0.1);
-
-const taxAmount = computed(() => basePrice() * taxRate());
-const totalPrice = computed(() => basePrice() + taxAmount());
-
-console.log(totalPrice()); // 110
-
-taxRate.set(0.2);
-console.log(totalPrice()); // 120
-```
-
-## Filter Example
+## Example
 
 ```typescript
 import { signal, computed } from '@hellajs/core';

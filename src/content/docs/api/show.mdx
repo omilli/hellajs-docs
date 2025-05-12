@@ -1,0 +1,64 @@
+---
+title: show
+description: Conditionally renders a template based on a boolean value.
+---
+
+```typescript
+
+/**
+ * @param when A boolean or a function that returns a boolean to determine if the template should be shown.
+ * @param is The template to render if `when` is true.
+ * @param not The template to render if `when` is false (optional).
+ * @returns A function that can be called to stop the loop.
+ */
+export function show(
+  when: boolean | (() => boolean),
+  is: VNodeValue | (() => VNodeValue),
+  not?: VNodeValue | (() => VNodeValue)
+): Node;
+
+/**
+ * @param cases An array of tuples where each tuple contains a condition and a template to render if the condition is true.
+ * @returns A function that can be called to stop the loop.
+ */
+export function show(
+  ...cases: Array<[() => boolean, VNodeValue | (() => VNodeValue)] | [VNodeValue | (() => VNodeValue)]>
+): Node;
+```
+
+Conditionally renders a template based on a boolean value. This is useful for showing or hiding elements in the DOM based on certain conditions. Works similarly to `if/else` and `switch/case` statements.
+
+## Example
+
+```typescript
+import { html, show } from '@hellajs/core';
+import { signal } from '@hellajs/core';
+
+const { div, button } = html;
+
+const isVisible = signal(false);
+
+const toggleVisibility = () => {
+  isVisible.set(!isVisible());
+};
+
+// If else pattern
+const App = div(
+  button({ onClick: toggleVisibility }, 'Toggle Visibility'),
+  show(
+    isVisible,
+    div('Hello World!'),
+    div('Goodbye World!')
+  )
+);
+
+// Switch case pattern
+const App2 = div(
+  button({ onClick: toggleVisibility }, 'Toggle Visibility'),
+  show(
+    [() => isVisible(), div('Hello World!')],
+    [() => !isVisible(), div('Goodbye World!')]
+  )
+);
+
+```

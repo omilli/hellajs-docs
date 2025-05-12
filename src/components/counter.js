@@ -1,21 +1,23 @@
-import { html, mount, signal } from "@hellajs/core";
+import { html, render, signal } from "@hellajs/core";
 
-// Ergonomic element proxies
+// Ergonomic HTML proxies
 const { div, button, span } = html;
 
-// Create reactive state OUTSIDE component functions
-const count = signal(0);
+// Component
+const Counter = function () {
+  // Reactive signals
+  const count = signal(0);
 
-// Update reactive state OUTSIDE component functions
-const setCount = (changeBy) => count.set(count() + changeBy);
+  // Signal setters
+  const setCount = (changeBy) => count.set(count() + changeBy);
 
-// Define component functions that use signals
-const Counter = () =>
-  div(
+  return div(
     button({ onclick: () => setCount(-1) }, "-"),
-    span(count()),
+    span(() => count()), // Functions make nodes reactive
     button({ onclick: () => setCount(+1) }, "+"),
   );
+}
 
-// Mount reactive components
-mount(Counter, "#app");
+// Render to the DOM
+// Queries "#app" in your html if no selector is provided
+render(Counter);
