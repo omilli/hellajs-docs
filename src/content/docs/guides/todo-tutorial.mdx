@@ -1,11 +1,154 @@
 ---
 title: Todo Tutorial
-description: A guide in my new Starlight docs site.
+description: This tutorial will guide you through building a simple Todo app using HellaJS.
 ---
 
-Guides lead a user through a specific task they want to accomplish, often with a sequence of steps.
-Writing a good guide requires thinking about what your users are trying to do.
+import TodoTutorial from "../../../components/TodoTutorial.astro"
 
-## Further reading
+This tutorial will guide you through building a simple Todo app using HellaJS.
 
-- Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
+You'll learn the core concepts of reactivity, templating, and user interaction.
+
+## Reactivity
+
+Start by importing everything you need and defining your state and derived values. For this example we'll put all of the following code inside a `Todo` function closure. 
+
+```typescript
+import { signal, computed, effect, html, forEach, show, mount } from "@hellajs/core";
+
+const { div, input, button, ul, li, h1 } = html;
+
+function Todo() {
+  const todos = signal<string[]>([]);
+  const todoCount = computed(() => todos().length);
+  const inputValue = signal("");
+
+  effect(() => {
+    console.log("Todo count:", todoCount());
+  });
+
+  // ...rest of the code will go here...
+}
+```
+
+## Templating
+
+Define your UI elements and their behaviour.
+
+```typescript
+// ...inside Todo()...
+
+  const TodoInput = input({
+    type: "text",
+    value: inputValue,
+    oninput: (e) => {
+      inputValue.set((e.target as HTMLInputElement)?.value)
+    }
+  });
+
+  const TodoButton = button({
+    onclick: () => {
+      if (inputValue()) {
+        todos.set([...todos(), inputValue()]);
+        inputValue.set("");
+      }
+    }
+  }, "Add");
+
+  const TodoList = ul(
+    forEach(todos, (todo, i) =>
+      li({ key: i },
+        todo
+      )
+    )
+  );
+```
+
+## Mouting
+
+Return the composed UI from your `Todo` function and mount it.
+
+Remember to use a function for the h1 element to ensure reactivity.
+
+```typescript
+// ...inside Todo()...
+
+  return div(
+    h1(
+      () => `Todo List (${todoCount()})`
+    ),
+    div(
+      TodoInput,
+      TodoButton
+    ),
+    TodoList
+  );
+}
+
+mount(Todo, '#todo'); // Have an id "todo" somewhere in your HTML
+```
+
+## Full Example
+
+```typescript
+import { signal, computed, effect, html, forEach, show, mount } from "@hellajs/core";
+
+const { div, input, button, ul, li, h1 } = html;
+
+function Todo() {
+  const todos = signal<string[]>([]);
+  const todoCount = computed(() => todos().length);
+  const inputValue = signal("");
+
+  effect(() => {
+    console.log("Todo count:", todoCount());
+  });
+
+  const TodoInput = input({
+    type: "text",
+    value: inputValue,
+    oninput: (e) => {
+      inputValue.set((e.target as HTMLInputElement)?.value)
+    }
+  })
+
+  const TodoButton = button({
+    onclick: () => {
+      if (inputValue()) {
+        todos.set([...todos(), inputValue()]);
+        inputValue.set("");
+      }
+    }
+  }, "Add")
+
+  const TodoList = ul(
+    forEach(todos, (todo, i) =>
+      li({ key: i },
+        todo
+      )
+    )
+  );
+
+  return div(
+    h1(
+      () => `Todo List (${todoCount()})`
+    ),
+    div(
+      TodoInput,
+      TodoButton
+    ),
+    show(
+      () => todos().length > 0,
+      TodoList,
+      div("No todos yet!")
+    )
+  );
+}
+
+mount(Todo, '#todo');
+```
+
+## Output
+
+<TodoTutorial />
+

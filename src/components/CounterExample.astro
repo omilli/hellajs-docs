@@ -5,7 +5,7 @@
 </div>
 
 <script>
-  import { html, render, signal } from "@hellajs/core";
+  import { html, mount, signal } from "@hellajs/core";
   import { tw } from "../tw";
 
   const { div, button, span } = html;
@@ -34,5 +34,5 @@
     btn(+1, "Increment"),
   );
 
-  render(Counter);
+  mount(Counter);
 </script>

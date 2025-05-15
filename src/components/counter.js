@@ -1,4 +1,4 @@
-import { html, render, signal } from "@hellajs/core";
+import { html, mount, signal } from "@hellajs/core";
 
 // Ergonomic HTML proxies
 const { div, button, span } = html;
@@ -20,4 +20,4 @@ const Counter = function () {
 
 // Render to the DOM
 // Queries "#app" in your html if no selector is provided
-render(Counter);
+mount(Counter);

@@ -1,0 +1,55 @@
+<div id="todo"></div>
+
+<script>
+  import {
+    signal,
+    computed,
+    effect,
+    html,
+    forEach,
+    show,
+    mount,
+  } from "@hellajs/core";
+
+  const { div, input, button, ul, li, h1 } = html;
+
+  function Todo() {
+    const todos = signal<string[]>([]);
+    const todoCount = computed(() => todos().length);
+    const inputValue = signal("");
+
+    effect(() => {
+      console.log("Todo count:", todoCount());
+    });
+
+    const TodoInput = input({
+      type: "text",
+      value: inputValue,
+      oninput: (e) => {
+        inputValue.set((e.target as HTMLInputElement)?.value);
+      },
+    });
+
+    const TodoButton = button(
+      {
+        onclick: () => {
+          if (inputValue()) {
+            todos.set([...todos(), inputValue()]);
+            inputValue.set("");
+          }
+        },
+      },
+      "Add",
+    );
+
+    const TodoList = ul(forEach(todos, (todo, i) => li({ key: i }, todo)));
+
+    return div(
+      h1(() => `Todo List (${todoCount()})`),
+      div(TodoInput, TodoButton),
+      show(() => todos().length > 0, TodoList, div("No todos yet!")),
+    );
+  }
+
+  mount(Todo, "#todo");
+</script>
