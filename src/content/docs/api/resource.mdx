@@ -1,0 +1,66 @@
+---
+title: resource
+description: Reactive async data fetching with caching, abort, and mutation.
+---
+
+```typescript
+/**
+ * @param fetcher The async function to fetch data. Receives the key as argument.
+ * @param options Options for key, initialData, cacheTime, onSuccess, onError, etc.
+ * @returns A resource object with loading, error, data, refetch, reset, mutate, abort, etc.
+ */
+resource<T, K>(
+  fetcher: (key: K) => Promise<T>,
+  options?: {
+    key?: () => K,
+    initialData?: T,
+    cacheTime?: number,
+    onSuccess?: (data: T) => void,
+    onError?: (err: any) => void
+  }
+): {
+  loading: () => boolean,
+  error: () => any,
+  data: () => T | undefined,
+  refetch: () => void,
+  reset: () => void,
+  mutate: (updater: () => Promise<T> | T) => void,
+  abort: () => void
+}
+```
+
+Reactive async data fetching with caching, abort, and mutation. The resource tracks loading, error, and data states, and can be refetched, reset, mutated, or aborted. Useful for fetching data that depends on reactive keys.
+
+## Example
+
+```typescript
+import { resource, signal, effect } from "@hellajs/core";
+
+// Example: fetch user by id
+const userId = signal("1");
+const userResource = resource(
+  (id: string) => fetch(`/api/user/${id}`).then(r => r.json()),
+  {
+    key: () => userId(),
+    initialData: null,
+    cacheTime: 60000, // 1 minute cache
+    onSuccess: (data) => console.log("Loaded", data),
+    onError: (err) => console.error("Error", err)
+  }
+);
+
+effect(() => {
+  if (userResource.loading()) console.log("Loading...");
+  if (userResource.error()) console.error(userResource.error());
+  if (userResource.data()) console.log("User:", userResource.data());
+});
+
+// Refetch, reset, mutate, abort
+userResource.refetch();
+userResource.reset();
+userResource.mutate(async () => {
+  // optimistic update
+  return { id: userId(), name: "New Name" };
+});
+userResource.abort();
+```
