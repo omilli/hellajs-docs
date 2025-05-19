@@ -26,7 +26,9 @@ router(
     redirects?: Array<{ from: string[], to: string }>
   }
 ): void
+```
 
+```typescript
 /**
  * Navigate programmatically to a route.
  * @param path The path or route pattern.
@@ -35,12 +37,22 @@ router(
 navigate(path: string, params?: Record<string, string>): void
 ```
 
+
 Minimal client-side router with hooks, params, and redirects. Supports route handlers, before/after hooks, 404 handling, and programmatic navigation.
 
 ## Example
 
 ```typescript
-import { router, navigate } from "@hellajs/core";
+import { router, navigate, route } from "@hellajs/core";
+
+// Example usage:
+effect(() => {
+  const r = route();
+  console.log("Current path:", r.path);
+  console.log("Params:", r.params);
+  console.log("Query:", r.query);
+  // You can use r.handler to render the current route's component
+});
 
 router({
   "/": () => { /* home handler */ },
