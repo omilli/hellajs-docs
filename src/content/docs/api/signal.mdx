@@ -1,18 +1,25 @@
 ---
 title: signal
-description: Creates reactive state values that trigger updates when changed.
+description: Creates a reactive function that holds a value and notifies subscribers when it changes.
 ---
 
 ```typescript
+interface Signal<T> {
+  (value?: T): T;
+  set: (value: T) => void;
+  cleanup: () => void;
+  subscribe: (fn: () => void) => () => void
+  unsubscribe: (fn: () => void) => void
+}
+
 /**
- * @param initial The initial value for the signal
- * @returns A signal function that can be called to get or set the value
+ * @param initialValue The initial value for the signal
+ * @returns A signal function with methods
  */
-signal<T>(initial: T): Signal<T>
+signal<T>(initialValue: T): Signal<T>
 ```
 
-The core primitive for reactive state in HellaJS.
-It creates a container for a value that can be read and updated, automatically triggering reactive effects when the value changes.
+Creates a reactive function that holds a value and notifies subscribers when it changes.
 
 ## Example
 
