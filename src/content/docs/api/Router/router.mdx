@@ -1,0 +1,70 @@
+---
+title: router
+description: Minimal client-side router with hooks, params, and redirects.
+---
+
+## router
+
+Minimal client-side router with hooks, params, and redirects. Supports route handlers, before/after hooks, 404 handling, and programmatic navigation.
+
+```typescript
+/**
+ * Minimal client-side router.
+ * 
+ * @param routes An object mapping paths to handlers, handler objects, or redirect strings.
+ *   - handler: (params?: Record<string, string>, query?: Record<string, string>) => void
+ *   - before: Optional per-route before hook.
+ *   - after: Optional per-route after hook.
+ *   - string: Redirect path.
+ * @param options Optional global hooks, 404 handler, and redirects.
+ *   - before: Global before hook.
+ *   - after: Global after hook.
+ *   - 404: Not found handler.
+ *   - redirects: Array of { from: string[], to: string }
+ * @returns RouteInfo
+ */
+router(
+  routes: {
+    [path: string]:
+      | ((params?: Record<string, string>, query?: Record<string, string>) => void)
+      | {
+          handler: (params?: Record<string, string>, query?: Record<string, string>) => void,
+          before?: () => void,
+          after?: () => void
+        }
+      | string // redirect
+  },
+  options?: {
+    before?: () => void,
+    after?: () => void,
+    404?: () => void,
+    redirects?: Array<{ from: string[], to: string }>
+  }
+): RouteInfo
+```
+
+### Example
+
+```typescript
+import { router, route } from "@hellajs/core";
+
+router({
+  "/": () => { /* home handler */ },
+  "/about": {
+    handler: () => { /* about handler */ },
+    before: () => { /* before hook */ },
+    after: () => { /* after hook */ }
+  },
+  "/user/:id": (params) => {
+    console.log(params.id); // dynamic param
+  },
+  "/old": "/new", // redirect
+}, {
+  before: () => { /* global before */ },
+  after: () => { /* global after */ },
+  404: () => { /* not found */ },
+  redirects: [
+    { from: ["/legacy"], to: "/" }
+  ]
+});
+```
