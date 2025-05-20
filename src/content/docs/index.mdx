@@ -8,22 +8,24 @@ import { Code, Icon } from "@astrojs/starlight/components";
 import CounterExample from "../../components/CounterExample.astro"
 import importedCounter from "../../components/counter?raw";
 
-<p class="mt-4 text-xl font-semibold">A reactive UI library for the web.</p>
+<p class="mt-4 text-xl font-semibold">A zero-build client-side framework for building reactive web interfaces.</p>
 
-<img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/core?color=blue" />
-
-<div class="mb-4">
-✅ **Reactive**: Direct DOM reactivity    
-✅ **Ergonomic**: Pure JS templating    
-✅ **Small**: Under 5kb gzipped 
+<div class="flex gap-4 items-center ">
+  <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/core?color=lightblue" />
+  <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/core" />
+  <img class="mt-0" alt="coverage" src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/omilli/6df7884e21572b4910c2f21edb658e56/raw/hellajs-coverage.json" />
+  
 </div>
 
-<div class="flex gap-2 items-center">
-  <Icon name="github" /> <a href="https://github.com/omilli/hellajs">GitHub</a>
-</div>
 
-<div class="flex gap-2 items-center mt-2">
-  <Icon name="npm" /> <a href="https://www.npmjs.com/package/@hellajs/core">npm</a>
+<div class="flex gap-4 items-center text-sm">
+  <div class="flex gap-2 items-center">
+    <Icon name="github" /> <a href="https://github.com/omilli/hellajs">GitHub</a>
+  </div>
+
+  <div class="flex gap-2 items-center mt-0">
+    <Icon name="npm" /> <a href="https://www.npmjs.com/package/@hellajs/core">npm</a>
+  </div>
 </div>
 
 ## Installation
