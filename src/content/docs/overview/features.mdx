@@ -1,20 +1,16 @@
 ---
 title: Features
-description: A composable, tree-shakeable, zero-build javascript framework.
+description: An unopinionated, comprehensive, lightweight, and simple framework.
 ---
 
+HellaJS is a largely unopinionated, browser-first framework designed to be comprehensive, lightweight, and simple. Inspiration for the reactive API comes from Angular, while SolidJS influences the functional approach and granular DOM updates. It's tree-shakeable with zero dependencies and produces small bundles. HellaJS should be compatible with any bundler, but there's no need for a compiler or any other build step.
 
-## Composable Reactivity
-Core reactive primitives like [signal](/api/reactive/signal/), [computed](/api/reactive/computed/), [effect](/api/reactive/effect/), [store](/api/reactive/store/), and [resource](/api/reactive/resource/) are composable and can be used independently or together for advanced state management patterns.
 
-## Direct DOM Updates
-There's no virtual DOM or diffing algorithm, [mount](/api/dom/mount/) is a one-time render. Updates are triggered only for the parts of the DOM that actually depend on changed state, minimizing unnecessary re-renders and increasing performance.
+### Composable Reactivity
+Create powerful state using reactive functions like [signal](/api/reactive/signal/), [computed](/api/reactive/computed/), [effect](/api/reactive/effect/), [store](/api/reactive/store/), and [resource](/api/reactive/resource/). Reactivity is highly composable and works well for basic or complex state management.
 
-## Declarative Templates
-Write  templates as JavaScript functions using proxy [html](/api/dom/html/) elements and the spread operator to pass attributes and child nodes. Handle lists with [forEach](/api/dom/foreach/) and conditional logic with [show](/api/dom/show/). No more messy template literals or JSX... Get functional!
+### Declarative Templates
+Build templates using proxy [html](/api/dom/html/) elements. Use the spread operator to define attributes and child nodes. Handle lists with [forEach](/api/dom/foreach/) and conditional logic as `if/else` / `switch` with [show](/api/dom/show/).
 
-## Zero Build
-Tree-shakeable with zero dependencies and produces a small bundle size. There's no need for a compiler, or any other build step. Perfect for PWAs and decentralized static hosting services like IPFS and Arweave. 
-
-## Flexible
-Use as a comprehensive standalone client-side framework with [router](/api/router/router/), or with server-side rendering (SSR) frameworks like Astro to add reactive islands with no plugin or extra configuration steps required.
+### Direct DOM Updates
+There's no virtual DOM and [mount](/api/dom/mount/) is a one-time render. Updates are triggered only for the parts of the DOM that depend on the changed state, minimizing unnecessary re-renders.

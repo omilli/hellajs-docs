@@ -7,13 +7,18 @@ const { div, button, span } = html;
 const Counter = function () {
   // Reactive signals
   const count = signal(0);
+  // Derived state
+  const countClass = () => count() % 2 === 0 ? "even" : "odd";
 
-  // Signal setters
-  const setCount = (changeBy) => count.set(count() + changeBy);
+  // Modify state
+  const setCount = (change) => {
+    count.set(count() + change);
+  };
 
-  return div(
+  // Functions make nodes reactive
+  return div({ class: countClass },
     button({ onclick: () => setCount(-1) }, "-"),
-    span(() => count()), // Functions make nodes reactive
+    span(count),
     button({ onclick: () => setCount(+1) }, "+"),
   );
 }

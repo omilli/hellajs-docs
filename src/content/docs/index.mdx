@@ -1,15 +1,13 @@
 ---
 title: HellaJS
-description: A zero-build client-side framework for building reactive web interfaces.
+description: A reactive client-side framework for building web interfaces.
 ---
 
 import { Code, Icon } from "@astrojs/starlight/components";
 import CounterExample from "../../components/CounterExample.astro"
 import importedCounter from "../../components/counter?raw";
 
-<p class="mt-4 text-xl font-semibold">A zero-build client-side framework for building reactive web interfaces.</p>
-
-Largely unopinionated and designed to be comprehensive, lightweight, and simple. HellaJS Reactivity is inspired by Angular signals, while the granular DOM is inspired by SolidJS.
+<p class="mt-4 text-xl font-semibold">A reactive client-side framework for building web interfaces.</p>
 
 <div class="flex gap-4 items-center ">
   <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/core?color=lightblue" />
@@ -27,7 +25,9 @@ Largely unopinionated and designed to be comprehensive, lightweight, and simple.
   </div>
 </div>
 
-## Counter Example
+## Quick Start
+
+Use whichever [environment](/api/overview/environments/) suits your needs.
 
 <Code code={importedCounter} lang="js" />
 
