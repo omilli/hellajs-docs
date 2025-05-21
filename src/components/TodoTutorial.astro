@@ -1,53 +1,46 @@
 <div id="todo"></div>
 
 <script>
-  import {
-    signal,
-    computed,
-    effect,
-    html,
-    forEach,
-    show,
-    mount,
-  } from "@hellajs/core";
+  import { signal, effect, html, forEach, show, mount } from "@hellajs/core";
 
-  const { div, input, button, ul, li, h1 } = html;
+  const { div, input, button, ul, li, p } = html;
 
   function Todo() {
     const todos = signal<string[]>([]);
-    const todoCount = computed(() => todos().length);
     const inputValue = signal("");
+
+    const todoCount = () => todos().length;
+    const hasTodos = () => todoCount() > 0;
+    const isDisabled = () => !inputValue();
+
+    const setInput = (e: InputEvent) => {
+      inputValue.set((e.target as HTMLInputElement)?.value);
+    };
+
+    const addTodo = () => {
+      todos.set([...todos(), inputValue()]);
+      inputValue.set("");
+    };
 
     effect(() => {
       console.log("Todo count:", todoCount());
     });
 
-    const TodoInput = input({
-      type: "text",
-      value: inputValue,
-      oninput: (e) => {
-        inputValue.set((e.target as HTMLInputElement)?.value);
-      },
-    });
-
-    const TodoButton = button(
-      {
-        onclick: () => {
-          if (inputValue()) {
-            todos.set([...todos(), inputValue()]);
-            inputValue.set("");
-          }
-        },
-      },
-      "Add",
-    );
-
-    const TodoList = ul(forEach(todos, (todo, i) => li({ key: i }, todo)));
-
     return div(
-      h1(() => `Todo List (${todoCount()})`),
-      div(TodoInput, TodoButton),
-      show(() => todos().length > 0, TodoList, div("No todos yet!")),
+      p("Todo List (", todoCount, ")"),
+      div(
+        input({
+          type: "text",
+          value: inputValue,
+          oninput: setInput,
+        }),
+        button({ onclick: addTodo, disabled: isDisabled }, "Add"),
+      ),
+      show(
+        hasTodos,
+        ul(forEach(todos, (todo) => li(todo))),
+        div("No todos yet!"),
+      ),
     );
   }
 

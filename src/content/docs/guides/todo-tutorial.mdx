@@ -5,23 +5,25 @@ description: This tutorial will guide you through building a simple Todo app usi
 
 import TodoTutorial from "../../../components/TodoTutorial.astro"
 
-This tutorial will guide you through building a simple Todo app using HellaJS.
-
-You'll learn the core concepts of reactivity, templating, and user interaction.
+Build a simple Todo app using the following core concepts:
+- Reactivity
+- Templating
+- Events
 
 ## Reactivity
 
-Start by importing everything you need and defining your state and derived values. For this example we'll put all of the following code inside a `Todo` function closure. 
+Start by creating signals to hold our todos and input value. We don't need to import `computed` when creating or derived signals inside a component, just wrap the logic in a function.
 
 ```typescript
-import { signal, computed, effect, html, forEach, show, mount } from "@hellajs/core";
-
-const { div, input, button, ul, li, h1 } = html;
+import { signal, effect } from "@hellajs/core";
 
 function Todo() {
-  const todos = signal<string[]>([]);
-  const todoCount = computed(() => todos().length);
+  const todos = signal([]);
   const inputValue = signal("");
+
+  const todoCount = () => todos().length;
+  const hasTodos = () => todoCount() > 0;
+  const isDisabled = () => !inputValue();
 
   effect(() => {
     console.log("Todo count:", todoCount());
@@ -31,61 +33,70 @@ function Todo() {
 }
 ```
 
-## Templating
-
-Define your UI elements and their behaviour.
+Now let's create some functions to `setInput` and `addTodo`. For this simple example we're not doing any extra checks like checking for duplicate todos or null event targets.
 
 ```typescript
-// ...inside Todo()...
+// ....continued...
 
-  const TodoInput = input({
-    type: "text",
-    value: inputValue,
-    oninput: (e) => {
-      inputValue.set((e.target as HTMLInputElement)?.value)
-    }
-  });
+const setInput = (event) => {
+  inputValue.set(event.target.value);
+};
 
-  const TodoButton = button({
-    onclick: () => {
-      if (inputValue()) {
-        todos.set([...todos(), inputValue()]);
-        inputValue.set("");
-      }
-    }
-  }, "Add");
+const addTodo = () => {
+  todos.set([...todos(), inputValue()]);
+  inputValue.set("");
+};
+```
 
-  const TodoList = ul(
-    forEach(todos, (todo, i) =>
-      li({ key: i },
-        todo
-      )
-    )
-  );
+## Templating
+
+Create the UI using a simple function templating system. Update the imports to include the erganomic [html](/api/dom/html/) proxy helper, we can destrcuture the elements if desired to use `div` instead of `html.div`. We also need [forEach](/api/dom/forEach/) to loop over the todos and [show](/api/dom/show/) for conditional rendering.
+
+```typescript
+import { signal, effect, forEach, show } from "@hellajs/core";
+
+const { div, input, button, ul, li, p } = html;
+```
+For dynamic attributes and text we need to pass a function reference. There are couple of ways to handle dynamic string as show below
+
+```typescript
+// ...continued...
+
+return div(
+  // use template strings
+  p(() => `Todo List (${todoCount()})`),
+  // or the p(...children) spread pattern
+  p("Todo List (", todoCount, ")"),
+  div(
+    input({
+      type: "text",
+      value: inputValue,
+      oninput: setInput,
+    }),
+    button({ onclick: addTodo, disabled: isDisabled }, "Add"),
+  ),
+  show(
+    hasTodos,
+    ul(forEach(todos, (todo) => li(todo))),
+    div("No todos yet!"),
+  ),
+);
 ```
 
 ## Mouting
 
-Return the composed UI from your `Todo` function and mount it.
-
-Remember to use a function for the h1 element to ensure reactivity.
+Add [mount](/api/dom/mount/) to your imports and pass the `Todo` function reference. By default, mount looks for `#app` element but you can pass any element id as a querySelector.
 
 ```typescript
-// ...inside Todo()...
+import { signal, effect, forEach, show, mount } from "@hellajs/core";
 
-  return div(
-    h1(
-      () => `Todo List (${todoCount()})`
-    ),
-    div(
-      TodoInput,
-      TodoButton
-    ),
-    TodoList
-  );
+const { div, input, button, ul, li, p } = html;
+
+function Todo() {
+  // Todo implementation...
 }
 
-mount(Todo, '#todo'); // Have an id "todo" somewhere in your HTML
+mount(Todo, '#todo');
 ```
 
 ## Full Example
@@ -93,55 +104,44 @@ mount(Todo, '#todo'); // Have an id "todo" somewhere in your HTML
 ```typescript
 import { signal, computed, effect, html, forEach, show, mount } from "@hellajs/core";
 
-const { div, input, button, ul, li, h1 } = html;
+const { div, input, button, ul, li, p } = html;
 
 function Todo() {
-  const todos = signal<string[]>([]);
-  const todoCount = computed(() => todos().length);
+  const todos = signal([]);
   const inputValue = signal("");
+
+  const todoCount = () => todos().length;
+  const hasTodos = () => todoCount() > 0;
+  const isDisabled = () => !inputValue();
 
   effect(() => {
     console.log("Todo count:", todoCount());
   });
 
-  const TodoInput = input({
-    type: "text",
-    value: inputValue,
-    oninput: (e) => {
-      inputValue.set((e.target as HTMLInputElement)?.value)
-    }
-  })
+  const setInput = (event) => {
+    inputValue.set(event.target.value);
+  };
 
-  const TodoButton = button({
-    onclick: () => {
-      if (inputValue()) {
-        todos.set([...todos(), inputValue()]);
-        inputValue.set("");
-      }
-    }
-  }, "Add")
-
-  const TodoList = ul(
-    forEach(todos, (todo, i) =>
-      li({ key: i },
-        todo
-      )
-    )
-  );
+  const addTodo = () => {
+    todos.set([...todos(), inputValue()]);
+    inputValue.set("");
+  };
 
   return div(
-    h1(
-      () => `Todo List (${todoCount()})`
-    ),
+    p("Todo List (", todoCount, ")"),
     div(
-      TodoInput,
-      TodoButton
+      input({
+        type: "text",
+        value: inputValue,
+        oninput: setInput,
+      }),
+      button({ onclick: addTodo, disabled: isDisabled }, "Add"),
     ),
     show(
-      () => todos().length > 0,
-      TodoList,
-      div("No todos yet!")
-    )
+      hasTodos,
+      ul(forEach(todos, (todo) => li(todo))),
+      div("No todos yet!"),
+    ),
   );
 }
 
