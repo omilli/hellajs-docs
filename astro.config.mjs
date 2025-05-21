@@ -12,12 +12,16 @@ export default defineConfig({
 			customCss: ['./src/styles/global.css'],
 			sidebar: [
 				{
+					label: 'Introduction',
+					link: '/',
+				},
+				{
 					label: 'Overview',
-					link: '/'
+					autogenerate: { directory: 'overview' },
 				},
 				{
 					label: 'Learn',
-					autogenerate: { directory: 'guides' },
+					autogenerate: { directory: 'learn' },
 				},
 
 				{

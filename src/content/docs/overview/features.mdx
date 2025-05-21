@@ -1,0 +1,20 @@
+---
+title: Features
+description: A composable, tree-shakeable, zero-build javascript framework.
+---
+
+
+## Composable Reactivity
+Core reactive primitives like [signal](/api/reactive/signal/), [computed](/api/reactive/computed/), [effect](/api/reactive/effect/), [store](/api/reactive/store/), and [resource](/api/reactive/resource/) are composable and can be used independently or together for advanced state management patterns.
+
+## Direct DOM Updates
+There's no virtual DOM or diffing algorithm, [mount](/api/dom/mount/) is a one-time render. Updates are triggered only for the parts of the DOM that actually depend on changed state, minimizing unnecessary re-renders and increasing performance.
+
+## Declarative Templates
+Write  templates as JavaScript functions using proxy [html](/api/dom/html/) elements and the spread operator to pass attributes and child nodes. Handle lists with [forEach](/api/dom/foreach/) and conditional logic with [show](/api/dom/show/). No more messy template literals or JSX... Get functional!
+
+## Zero Build
+Tree-shakeable with zero dependencies and produces a small bundle size. There's no need for a compiler, or any other build step. Perfect for PWAs and decentralized static hosting services like IPFS and Arweave. 
+
+## Flexible
+Use as a comprehensive standalone client-side framework with [router](/api/router/router/), or with server-side rendering (SSR) frameworks like Astro to add reactive islands with no plugin or extra configuration steps required.
