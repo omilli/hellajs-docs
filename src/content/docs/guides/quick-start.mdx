@@ -1,0 +1,19 @@
+---
+title: Quick Start
+description: A zero-build client-side framework for building reactive web interfaces.
+---
+
+import { Code, Icon } from "@astrojs/starlight/components";
+import CounterExample from "@/components/CounterExample.astro"
+import importedCounter from "@/components/counter?raw";
+
+## Installation
+```bash
+npm install @hellajs/core
+```
+
+## Counter Example
+
+<Code code={importedCounter} lang="js" />
+
+<CounterExample/>

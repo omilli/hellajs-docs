@@ -10,6 +10,8 @@ import importedCounter from "../../components/counter?raw";
 
 <p class="mt-4 text-xl font-semibold">A zero-build client-side framework for building reactive web interfaces.</p>
 
+Largely unopinionated and designed to be comprehensive, lightweight, and simple. HellaJS Reactivity is inspired by Angular signals, while the granular DOM is inspired by SolidJS.
+
 <div class="flex gap-4 items-center ">
   <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/core?color=lightblue" />
   <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/core" />
@@ -26,34 +28,19 @@ import importedCounter from "../../components/counter?raw";
   </div>
 </div>
 
-## Installation
-```bash
-npm install @hellajs/core
-```
-
-## Counter Example
-
-<Code code={importedCounter} lang="js" />
-
-<CounterExample/>
-
-## Features
-
-HellaJS is a largely unopinionated, browser-first framework for building web applications. It's designed to be comprehensive, lightweight, and simple. The reactive API is heavily inspired by Angular signals, while the granular DOM updates are inspired by SolidJS.
-
-### Composable Reactivity
+## Composable Reactivity
 Core reactive primitives like [signal](/api/reactive/signal/), [computed](/api/reactive/computed/), [effect](/api/reactive/effect/), [store](/api/reactive/store/), and [resource](/api/reactive/resource/) are composable and can be used independently or together for advanced state management patterns.
 
-### Direct DOM Updates
+## Direct DOM Updates
 There's no virtual DOM or diffing algorithm, [mount](/api/dom/mount/) is a one-time render. Updates are triggered only for the parts of the DOM that actually depend on changed state, minimizing unnecessary re-renders and increasing performance.
 
-### Declarative Templates
+## Declarative Templates
 Write  templates as JavaScript functions using proxy [html](/api/dom/html/) elements and the spread operator to pass attributes and child nodes. Handle lists with [forEach](/api/dom/foreach/) and conditional logic with [show](/api/dom/show/). No more messy template literals or JSX... Get functional!
 
-### Zero Build
+## Zero Build
 Tree-shakeable with zero dependencies and produces a small bundle size. There's no need for a compiler, or any other build step. Perfect for PWAs and decentralized static hosting services like IPFS and Arweave. 
 
-### Flexible
+## Flexible
 Use as a comprehensive standalone client-side framework with [router](/api/router/router/), or with server-side rendering (SSR) frameworks like Astro to add reactive islands with no plugin or extra configuration steps required.
 
 📖 [HellaJS Documentation](https://hellajs.com)

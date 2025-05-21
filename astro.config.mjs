@@ -12,18 +12,14 @@ export default defineConfig({
 			customCss: ['./src/styles/global.css'],
 			sidebar: [
 				{
-					label: 'Learn',
-					items: [
-						{
-							label: 'Quick Start',
-							link: '/',
-						},
-						{
-							label: 'Tutorial',
-							slug: 'guides/todo-tutorial'
-						},
-					],
+					label: 'Overview',
+					link: '/'
 				},
+				{
+					label: 'Learn',
+					autogenerate: { directory: 'guides' },
+				},
+
 				{
 					label: 'API',
 					autogenerate: { directory: 'api' },
