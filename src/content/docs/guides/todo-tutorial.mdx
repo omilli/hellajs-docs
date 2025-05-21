@@ -50,14 +50,14 @@ const addTodo = () => {
 
 ## Templating
 
-Create the UI using a simple function templating system. Update the imports to include the erganomic [html](/api/dom/html/) proxy helper, we can destrcuture the elements if desired to use `div` instead of `html.div`. We also need [forEach](/api/dom/forEach/) to loop over the todos and [show](/api/dom/show/) for conditional rendering.
+Create the UI using a simple function templating system. Update the imports to include the ergonomic [html](/api/dom/html/) proxy helper, we can destructure the elements if desired to use `div` instead of `html.div`. We also need [forEach](/api/dom/forEach/) to loop over the todos and [show](/api/dom/show/) for conditional rendering.
 
 ```typescript
 import { signal, effect, forEach, show } from "@hellajs/core";
 
 const { div, input, button, ul, li, p } = html;
 ```
-For dynamic attributes and text we need to pass a function reference. There are couple of ways to handle dynamic string as show below
+For dynamic attributes and text we need to pass a function reference. There are a couple of ways to handle dynamic string as shown below
 
 ```typescript
 // ...continued...
@@ -83,7 +83,7 @@ return div(
 );
 ```
 
-## Mouting
+## Mounting
 
 Add [mount](/api/dom/mount/) to your imports and pass the `Todo` function reference. By default, mount looks for `#app` element but you can pass any element id as a querySelector.
 
