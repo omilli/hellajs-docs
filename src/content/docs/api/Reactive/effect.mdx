@@ -1,21 +1,26 @@
 ---
 title: effect
-description: Creates reactive side effects that automatically run when dependencies change.
+description: Reactive side effects that automatically run when dependencies change.
 ---
+
+<p class="subtitle">Reactive side effects that automatically run when dependencies change.</p>
+
 
 ```typescript
 /**
   * @param fn - The function to execute when dependencies change
-  * @returns A cleanup function that can be called to clean up the effect
+  * @returns A cleanup function
  */
 effect(fn: EffectFn): EffectFn
 
 ```
 
-Creates reactive side effects that automatically track their dependencies and re-run whenever those dependencies change. Returns a function to manually stop the effect and release resources.
 
+## Usage
 
-## Example
+Effects return a function to manually cleanup and release resources. 
+
+Like [signals](/api/reactive/signal), cleanup is required for global effects only. Effects created inside a component function are automatically cleaned when the component is unmounted.
 
 ```typescript
 import { signal, effect } from '@hellajs/core';

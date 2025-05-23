@@ -1,18 +1,34 @@
 ---
 title: computed
-description: Creates derived state that automatically updates when dependencies change.
+description: A read-only signal that automatically updates when dependencies change.
 ---
 
+<p class="subtitle">A read-only [signal](/api/reactive/signal) that updates when dependencies change.</p>
+
 ```typescript
+interface ReadonlySignal<T> {
+  // Get the value
+  (): T;
+  // Subscribe to changes
+  subscribe: (fn: () => void) => () => void
+  // Unsubscribe from changes
+  unsubscribe: (fn: () => void) => void
+  // Cleanup all subscribers
+  cleanup: () => void;
+}
+
 /**
- * @param compute A function that computes a derived value from all internal signals
- * @returns A read-only signal value that updates when any of the dependencies change.
+ * @param compute returns a derived value from all internal signals
+ * @returns A read-only signal
  */
 computed<T>(compute: () => T): SignalValue<T>
 ```
-Creates a read-only signal derived from internal signals and automatically tracks it's dependencies. Caches the result until any of the dependencies change, and only recalculates when the value is used.
 
-## Example
+## Usage
+
+Computed signals are derived from other signals. Results are cached until any dependencies change and only recalculated when the value is used.
+
+Like signals, cleanup is required for global computed signals only as components don't need explicit `computed` usage to derive signals.
 
 ```typescript
 import { signal, computed } from '@hellajs/core';
@@ -29,8 +45,11 @@ const filteredItems = computed(() =>
   items().filter(item => item.category === category())
 );
 
-console.log(filteredItems()); // [{ id: 1, name: 'Apple'... }, { id: 3, name: 'Banana'... }]
+console.log(filteredItems());
+ // [{ id: 1, name: 'Apple'... }, { id: 3, name: 'Banana'... }]
 
 category.set('Vegetable');
-console.log(filteredItems()); // [{ id: 2, name: 'Carrot'... }]
+
+console.log(filteredItems());
+// [{ id: 2, name: 'Carrot'... }]
 ```
