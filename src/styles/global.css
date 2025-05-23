@@ -233,3 +233,8 @@
     --sl-mobile-toc-height: 0rem;
   }
 }
+
+.subtitle {
+  font-size: var(--sl-text-xl);
+  font-weight: var(--font-weight-semibold)
+}
