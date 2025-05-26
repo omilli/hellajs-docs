@@ -9,7 +9,7 @@ export default defineConfig({
 		starlight({
 			title: 'HellaJS',
 			logo: {
-				src: '/public/logo.svg',
+				src: '/public/favicon.svg',
 				alt: 'HellaJS Logo',
 			},
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/omilli/hellajs' }],
