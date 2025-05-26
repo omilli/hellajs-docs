@@ -3,14 +3,16 @@ title: forEach
 description: Loops through an array and renders a template for each item.
 ---
 
+<p class="subtitle">Render a template for each item in an array.</p>
+
 ```typescript
 /**
- * @param array - The array to loop through
- * @param arg2 - The template function to render for each item or a key to track the item 
- * @param arg3 - The template function to render for each item if arg2 is a key
- * @returns A function that can be called to stop the loop
+ * Render a template for each item in an array.
+ * @param array Array or function returning array.
+ * @param arg2 Template function or key string.
+ * @param arg3 Template function if arg2 is a key.
+ * @returns Function to mount the list.
  */
-
 type ForEach<T> = (item: T, index: number) => VNodeValue;
 
 export function forEach<T>(
@@ -20,12 +22,15 @@ export function forEach<T>(
 )
 ```
 
-Loops through an array and renders a template for each item. This is useful for rendering lists of items in a declarative way.
+## Usage
 
-## Example
+Render lists declaratively. Supports reactive arrays via <a href="/api/reactive/signal">signal</a>. You can provide a template function, and optionally a key for efficient DOM updates.
+
+### Basic Usage
 
 ```typescript
 import { html, forEach } from '@hellajs/core';
+import { signal } from '@hellajs/core';
 
 const { ul, li } = html;
 
@@ -33,9 +38,72 @@ const items = signal([1, 2, 3]);
 
 const List = ul(
   forEach(items, (item) =>
-    li({ key: item },
-      `Item ${item}`
-    )
+    li(`Item ${item}`)
+  )
+);
+```
+
+### Static Array
+
+```typescript
+const StaticList = ul(
+  forEach([10, 20, 30], (item, i) =>
+    li(`Static ${item}`)
+  )
+);
+```
+
+### Keys
+
+Keys are used for efficient DOM updates. You can set keys in several ways:
+
+#### Property Name
+
+Pass a string as the second argument to use a property as the key.
+
+```typescript
+const users = signal([
+  { index: 1, name: 'Alice' },
+  { index: 2, name: 'Bob' }
+]);
+
+const UserList = ul(
+  forEach(users, 'index', (user) =>
+    li(user.name)
+  )
+);
+```
+
+#### "id" Fallback
+
+If you do not provide a key, but your items have an <code>id</code> property, <code>forEach</code> will use <code>item.id</code> as the key automatically.
+
+```typescript
+const users = signal([
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+]);
+
+const UserList = ul(
+  forEach(users, (user) =>
+    li(user.name)
+  )
+);
+```
+
+#### Manual
+
+You can also set the key directly on the element.
+
+```typescript
+const users = signal([
+  { index: 1, name: 'Alice' },
+  { index: 2, name: 'Bob' }
+]);
+
+const List = ul(
+  forEach(users, (item) =>
+    li({ key: item.index }, `Item ${item.name}`)
   )
 );
 ```

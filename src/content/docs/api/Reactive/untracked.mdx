@@ -3,17 +3,20 @@ title: untracked
 description: Prevents tracking signal dependencies within a function call.
 ---
 
+<p class="subtitle">Read <a href="/api/reactive/signal">signals</a> without tracking dependencies.</p>
+
 ```typescript
 /**
- * @param callback The function to execute without tracking signal dependencies
- * @returns The result of the function execution
+ * Execute a function without tracking signal dependencies.
+ * @param callback Function to execute untracked.
+ * @returns The result of the function.
  */
 untracked<T>(callback: () => T): T
 ```
 
-Allows you to access signal values without creating dependencies. It's useful when you need to read a signal's value within an effect or computed value without causing that effect to re-run when the signal changes.
+## Usage
 
-## Example
+Use <code>untracked</code> to read a <a href="/api/reactive/signal">signal</a> inside an <a href="/api/reactive/effect">effect</a> or <a href="/api/reactive/computed">computed</a> without creating a dependency. This prevents the parent effect or computed from re-running when the signal changes.
 
 ```typescript
 import { signal, effect, untracked } from '@hellajs/core';
@@ -22,12 +25,12 @@ const count = signal(0);
 const threshold = signal(10);
 
 effect(() => {
-  // This will create a dependency on count
+  // This creates a dependency on count
   const currentCount = count();
-  
-  // This will NOT create a dependency on threshold
+
+  // This does NOT create a dependency on threshold
   const currentThreshold = untracked(() => threshold());
-  
+
   console.log(`Count: ${currentCount}, Threshold: ${currentThreshold}`);
 });
 

@@ -3,9 +3,7 @@ title: router
 description: Minimal client-side router with hooks, params, and redirects.
 ---
 
-## router
-
-Minimal client-side router with hooks, params, and redirects. Supports route handlers, before/after hooks, 404 handling, and programmatic navigation.
+<p class="subtitle">Minimal client-side router with hooks, params, redirects, and 404.</p>
 
 ```typescript
 /**
@@ -43,11 +41,14 @@ router(
 ): RouteInfo
 ```
 
-### Example
+## Usage
+
+Set up client-side routing with route handlers, hooks, redirects, and 404 handling. Use with <a href="/api/router/route">route</a> for reactive route info and <a href="/api/router/navigate">navigate</a> for programmatic navigation.
 
 ```typescript
 import { router, route } from "@hellajs/core";
 
+// Define routes and handlers
 router({
   "/": () => { /* home handler */ },
   "/about": {
@@ -67,4 +68,17 @@ router({
     { from: ["/legacy"], to: "/" }
   ]
 });
+
+// Access current route reactively
+import { effect } from "@hellajs/core";
+effect(() => {
+  const r = route();
+  console.log(r.path, r.params, r.query);
+});
 ```
+
+<p>
+See also: 
+<a href="/api/router/route">route</a>, 
+<a href="/api/router/navigate">navigate</a>
+</p>

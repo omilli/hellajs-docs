@@ -3,40 +3,41 @@ title: batch
 description: Prevents multiple effects by grouping multiple signal updates.
 ---
 
+<p class="subtitle">Group multiple <a href="/api/reactive/signal">signal</a> updates to prevent redundant <a href="/api/reactive/effect">effects</a>.</p>
+
 ```typescript
 /**
- * @param callback A function that contains the signals to be batched.
- * @returns The result of the function.
+ * Group multiple signal updates into a single effect flush.
+ * @param callback Function containing batched signal updates.
+ * @returns The result of the callback.
  */
 batch<T>(callback: () => T): T
-
 ```
 
-Prevents multiple effects from running by grouping multiple signal updates into a single function. Useful when you want to update multiple signals at once without triggering reactivity for each individual update.
+## Usage
 
-## Example
+Batch groups multiple <a href="/api/reactive/signal">signal</a> updates together so that <a href="/api/reactive/effect">effects</a> only run once after all updates. Use this to avoid unnecessary recomputation when updating several signals at once.
 
 ```typescript
 import { signal, batch } from '@hellajs/core';
 
-const formData = {
-  username: signal(''),
-  email: signal(''),
-  isSubmitting: signal(false),
-  isSuccess: signal(false)
-};
+// Create signals for form state
+const username = signal('');
+const email = signal('');
+const isSubmitting = signal(false);
+const isSuccess = signal(false);
 
 function submitForm() {
   batch(() => {
-    formData.isSubmitting.set(true);
-    
-    // Simulate asynchronous form submission
+    isSubmitting.set(true);
+
+    // Simulate async form submission
     setTimeout(() => {
       batch(() => {
-        formData.isSubmitting.set(false);
-        formData.isSuccess.set(true);
-        formData.username.set('');
-        formData.email.set('');
+        isSubmitting.set(false);
+        isSuccess.set(true);
+        username.set('');
+        email.set('');
       });
     }, 1000);
   });

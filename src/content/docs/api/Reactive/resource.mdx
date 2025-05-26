@@ -3,11 +3,14 @@ title: resource
 description: Reactive async data fetching with caching, abort, and mutation.
 ---
 
+<p class="subtitle">Reactive async data fetching with caching and mutation.</p>
+
 ```typescript
 /**
- * @param fetcher The async function to fetch data. Receives the key as argument.
+ * Create a reactive resource for async data fetching.
+ * @param fetcher Async function to fetch data, receives key as argument.
  * @param options Options for key, initialData, cacheTime, onSuccess, onError, etc.
- * @returns A resource object with loading, error, data, refetch, reset, mutate, abort, etc.
+ * @returns Resource object with loading, error, data, refetch, reset, mutate, abort, etc.
  */
 resource<T, K>(
   fetcher: (key: K) => Promise<T>,
@@ -24,20 +27,22 @@ resource<T, K>(
   data: () => T | undefined,
   refetch: () => void,
   reset: () => void,
-  mutate: (updater: () => Promise<T> | T) => void,
-  abort: () => void
+  mutate: (updater: () => Promise<T>) => Promise<void>,
+  invalidate: () => void
 }
 ```
 
-Reactive async data fetching with caching, abort, and mutation. The resource tracks loading, error, and data states, and can be refetched, reset, mutated, or aborted. Useful for fetching data that depends on reactive keys.
+## Usage
 
-## Example
+Create a reactive resource for async data. The resource tracks loading, error, and data states, and can be refetched, reset, mutated, or invalidated. Useful for fetching data that depends on reactive keys and integrates with <a href="/api/reactive/signal">signal</a> and <a href="/api/reactive/effect">effect</a>.
 
 ```typescript
 import { resource, signal, effect } from "@hellajs/core";
 
-// Example: fetch user by id
+// Reactive key for fetching user
 const userId = signal("1");
+
+// Create a resource for user data
 const userResource = resource(
   (id: string) => fetch(`/api/user/${id}`).then(r => r.json()),
   {
@@ -55,12 +60,18 @@ effect(() => {
   if (userResource.data()) console.log("User:", userResource.data());
 });
 
-// Refetch, reset, mutate, abort
+// Refetch, reset, mutate, invalidate
 userResource.refetch();
 userResource.reset();
 userResource.mutate(async () => {
-  // optimistic update
+  // Optimistic update
   return { id: userId(), name: "New Name" };
 });
-userResource.abort();
+userResource.invalidate();
 ```
+
+<p>
+See also: 
+<a href="/api/reactive/signal">signal</a>, 
+<a href="/api/reactive/effect">effect</a>
+</p>

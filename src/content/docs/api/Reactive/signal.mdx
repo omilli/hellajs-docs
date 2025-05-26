@@ -26,7 +26,9 @@ interface Signal<T> {
 signal<T>(initialValue: T): Signal<T>
 ```
 
-## Get
+## Usage
+
+### Get
 
 Get a signal by calling it with no arguments.
 
@@ -40,7 +42,7 @@ const count = signal(5);
 console.log(count()); // 5
 ```
 
-## Set
+### Set
 Update a signal value using the set method, or by calling it with a new value.
 
 ```typescript
@@ -53,9 +55,9 @@ count(20);
 console.log(count()); // 10
 ```
 
-## Subscribe
+### Subscribe
 
-Subscribe to signals (or use [effect](/api/reactive/effect)) to get notified when the value changes.
+Subscribe to signals (or use <a href="/api/reactive/effect">effect</a>) to get notified when the value changes.
 
 ```typescript
 
@@ -82,7 +84,7 @@ count.subscribe(subscribeFn);
 count.unsubscribe(subscribeFn); 
 ```
 
-## Cleanup
+### Cleanup
 Call cleanup when the signal is no longer needed. It will remove all subscribers and stop notifying them. Cleanup is required for global signals only. Signals created inside a component function are automatically cleaned when the component is unmounted.
 
 ```typescript

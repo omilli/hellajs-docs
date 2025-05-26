@@ -3,7 +3,7 @@ title: computed
 description: A read-only signal that automatically updates when dependencies change.
 ---
 
-<p class="subtitle">A read-only [signal](/api/reactive/signal) that updates when dependencies change.</p>
+<p class="subtitle">A read-only <a href="/api/reactive/signal">signal</a> that updates when dependencies change.</p>
 
 ```typescript
 interface ReadonlySignal<T> {
@@ -26,9 +26,9 @@ computed<T>(compute: () => T): SignalValue<T>
 
 ## Usage
 
-Computed signals are derived from other signals. Results are cached until any dependencies change and only recalculated when the value is used.
+<a href="/api/reactive/computed">Computed</a> signals are derived from other <a href="/api/reactive/signal">signals</a>. Results are cached until any dependencies change and only recalculated when the value is used.
 
-Like signals, cleanup is required for global computed signals only as components don't need explicit `computed` usage to derive signals.
+Like <a href="/api/reactive/signal">signals</a>, cleanup is required for global <a href="/api/reactive/computed">computed</a> signals only as components don't need explicit <code>computed</code> usage to derive signals.
 
 ```typescript
 import { signal, computed } from '@hellajs/core';

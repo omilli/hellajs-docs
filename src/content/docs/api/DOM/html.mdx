@@ -1,14 +1,31 @@
 ---
 title: html
-description: Provides a simple way to create virtual DOM elements.
+description: Provides a simple way to create DOM elements.
 ---
 
+<p class="subtitle">Create DOM elements using tag functions.</p>
 
-Provides a simple way to create virtual DOM elements using functions named after standard HTML tags.
-It supports setting attributes and properties, nesting children, using fragments, and automatically handling arrays of child elements.
+```typescript
+/**
+ * Factory for DOM elements.
+ * @example html.div({ class: "foo" }, "bar")
+ */
+export const html: {
+  [K in keyof HTMLElementTagNameMap]: (
+    props?: VNodeProps,
+    ...children: VNodeValue[]
+  ) => VNode;
+} & {
+  $: (
+    props?: VNodeProps,
+    ...children: VNodeValue[]
+  ) => VNode;
+};
+```
 
+## Usage
 
-## Example
+Use <code>html</code> to create elements, set attributes, and nest children. Supports fragments and arrays.
 
 ```typescript
 import { html } from '@hellajs/core';

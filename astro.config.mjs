@@ -8,6 +8,10 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'HellaJS',
+			logo: {
+				src: '/public/logo.svg',
+				alt: 'HellaJS Logo',
+			},
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/omilli/hellajs' }],
 			customCss: ['./src/styles/global.css'],
 			sidebar: [

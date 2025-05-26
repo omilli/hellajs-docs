@@ -3,13 +3,15 @@ title: show
 description: Conditionally renders a template based on a boolean value.
 ---
 
-```typescript
+<p class="subtitle">Conditionally render templates based on a value or expression.</p>
 
+```typescript
 /**
- * @param when A boolean or a function that returns a boolean to determine if the template should be shown.
- * @param is The template to render if `when` is true.
- * @param not The template to render if `when` is false (optional).
- * @returns A function that can be called to stop the loop.
+ * Conditionally render a template.
+ * @param when Boolean or function returning boolean.
+ * @param is Template to render if true.
+ * @param not Template to render if false (optional).
+ * @returns Rendered Node.
  */
 export function show(
   when: boolean | (() => boolean),
@@ -18,17 +20,20 @@ export function show(
 ): Node;
 
 /**
- * @param cases An array of tuples where each tuple contains a condition and a template to render if the condition is true.
- * @returns A function that can be called to stop the loop.
+ * Render the first matching case.
+ * @param cases Array of [condition, template] or [template] for default.
+ * @returns Rendered Node.
  */
 export function show(
   ...cases: Array<[() => boolean, VNodeValue | (() => VNodeValue)] | [VNodeValue | (() => VNodeValue)]>
 ): Node;
 ```
 
-Conditionally renders a template based on a boolean value. This is useful for showing or hiding elements in the DOM based on certain conditions. Works similarly to `if/else` and `switch/case` statements.
+## Usage
 
-## Example
+Render a template based on a condition or a list of cases. Use with <a href="/api/reactive/signal">signal</a> for reactivity.
+
+### If/Else
 
 ```typescript
 import { html, show } from '@hellajs/core';
@@ -42,23 +47,25 @@ const toggleVisibility = () => {
   isVisible.set(!isVisible());
 };
 
-// If else pattern
 const App = div(
   button({ onClick: toggleVisibility }, 'Toggle Visibility'),
   show(
-    isVisible,
-    div('Hello World!'),
-    div('Goodbye World!')
+    isVisible, // condition (signal or function)
+    div('Hello World!'), // shown if true
+    div('Goodbye World!') // shown if false
   )
 );
+```
 
-// Switch case pattern
+### Switch/Case
+
+```typescript
 const App2 = div(
   button({ onClick: toggleVisibility }, 'Toggle Visibility'),
   show(
-    [() => isVisible(), div('Hello World!')],
-    [() => !isVisible(), div('Goodbye World!')]
+    [() => isVisible(), div('Hello World!')], // first matching case
+    [() => !isVisible(), div('Goodbye World!')], // next case
+    [div('Default')] // default if no case matches
   )
 );
-
 ```

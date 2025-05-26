@@ -25,11 +25,11 @@
   --sl-color-white: hsl(0, 0%, 100%);
   /* “white” */
   /* Map to Tailwind Slate palette (Dark Mode) */
-  --sl-color-gray-1: hsl(222.2 47.4% 71.8%);
+  --sl-color-gray-1: hsl(221, 44%, 89%);
   /* slate-400 */
-  --sl-color-gray-2: hsl(222.2 47.4% 84.7%);
+  --sl-color-gray-2: hwb(222 85% 9%);
   /* slate-300 - Used for text */
-  --sl-color-gray-3: hsl(222.2 47.4% 56.3%);
+  --sl-color-gray-3: hsl(222, 63%, 86%);
   /* slate-500 */
   --sl-color-gray-4: hsl(222.2 47.4% 31.2%);
   /* slate-700 */
@@ -61,9 +61,9 @@
   --sl-color-red: hsl(var(--sl-hue-red), 82%, 63%);
   --sl-color-red-high: hsl(var(--sl-hue-red), 82%, 87%);
 
-  --sl-color-accent-low: oklch(29.3% 0.066 243.157);
-  --sl-color-accent: oklch(58.8% 0.158 241.966);
-  --sl-color-accent-high: oklch(82.8% 0.111 230.318);
+  --sl-color-accent-low: #00FFF6;
+  --sl-color-accent: #00FFF6;
+  --sl-color-accent-high: #00FFF6;
 
   --sl-color-text: var(--sl-color-gray-2);
   --sl-color-text-accent: var(--sl-color-accent-high);
@@ -169,7 +169,7 @@
   /* slate-500 */
   --sl-color-gray-5: hsl(222.2 47.4% 71.8%);
   /* slate-400 */
-  --sl-color-gray-6: hsl(222.2 47.4% 84.7%);
+  --sl-color-gray-6: hsl(222.2 47.4% 90.8%);
   /* slate-300 - Used for inline code bg, hairlines */
   --sl-color-gray-7: hsl(222.2 47.4% 90.8%);
   /* slate-200 - Used for nav bg */
@@ -192,9 +192,9 @@
   --sl-color-red: hsl(var(--sl-hue-red), 90%, 60%);
   --sl-color-red-low: hsl(var(--sl-hue-red), 80%, 90%);
 
-  --sl-color-accent-high: oklch(29.3% 0.066 243.157);
-  --sl-color-accent: oklch(58.8% 0.158 241.966);
-  --sl-color-accent-low: oklch(82.8% 0.111 230.318);
+  --sl-color-accent-low: #008078;
+  --sl-color-accent: #008078;
+  --sl-color-accent-high: #008078;
 
   --sl-color-text-accent: var(--sl-color-accent);
   --sl-color-text-invert: var(--sl-color-black);
@@ -234,7 +234,25 @@
   }
 }
 
+.site-title span {
+  display: none;
+}
+
+.site-title img {
+  height: 30px;
+}
+
 .subtitle {
   font-size: var(--sl-text-xl);
   font-weight: var(--font-weight-semibold)
+}
+
+:where(.astro-3ii7xxms)[aria-current=page],
+:where(.astro-3ii7xxms)[aria-current=page]:hover,
+:where(.astro-3ii7xxms)[aria-current=page]:focus {
+  color: var(--sl-color-black)
+}
+
+[data-theme='light'] .site-title img {
+  filter: brightness(0.5) contrast(1.5);
 }

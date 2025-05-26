@@ -1,18 +1,22 @@
 ---
 title: mount
-description: Renders a virtual DOM tree to the real DOM.
+description: Renders a DOM tree to the real DOM.
 ---
+
+<p class="subtitle">Render a DOM tree into a real DOM element.</p>
 
 ```typescript
 /**
- * @param vNode A virtual DOM node or a function that returns a virtual DOM node.
- * @param rootSelector A CSS selector string that specifies the root element, defaults to #app
-*/
-
-mount(vNode: VNode | (() => VNode), rootSelector: string)
+ * Render a DOM node to the DOM.
+ * @param vNode Node or function returning one.
+ * @param rootSelector CSS selector for the root element, defaults to #app.
+ */
+mount(vNode: VNode | (() => VNode), rootSelector?: string): void
 ```
 
-## Example
+## Usage
+
+Mount a DOM tree to a real DOM node. Use with <a href="/api/reactive/signal">signal</a> for reactivity.
 
 ```typescript
 import { mount, html } from '@hellajs/core';
