@@ -234,14 +234,6 @@
   }
 }
 
-.site-title span {
-  display: none;
-}
-
-.site-title img {
-  height: 30px;
-}
-
 .subtitle {
   font-size: var(--sl-text-xl);
   font-weight: var(--font-weight-semibold)
