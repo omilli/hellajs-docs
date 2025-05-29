@@ -48,3 +48,24 @@ const form = div(
   }, 'Submit')
 );
 ```
+
+## Raw HTML
+
+You can inject raw HTML strings into an element using the `html` prop. This bypasses normal element creation and directly inserts the HTML into the DOM.
+
+:::danger[Security Warning]
+**Never use the `html` prop with untrusted user input!**
+:::
+
+```typescript
+import { html } from '@hellajs/core';
+
+// Insert raw HTML content
+const content = html.div({
+  html: '<p class="highlight">This is <strong>raw HTML</strong></p>'
+});
+
+// ❌ DANGEROUS - Never do this with user input
+const userInput = getUserInput(); // Could contain malicious scripts
+html.div({ html: userInput }); // XSS vulnerability!
+```
