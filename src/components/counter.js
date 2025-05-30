@@ -1,4 +1,5 @@
-import { html, mount, signal } from "@hellajs/core";
+import { signal } from "@hellajs/core";
+import { html, mount } from "@hellajs/dom";
 
 // Ergonomic HTML proxies
 const { div, button, span } = html;
