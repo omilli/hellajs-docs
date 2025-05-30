@@ -37,7 +37,8 @@ resource<T, K>(
 Create a reactive resource for async data. The resource tracks loading, error, and data states, and can be refetched, reset, mutated, or invalidated. Useful for fetching data that depends on reactive keys and integrates with <a href="/api/reactive/signal">signal</a> and <a href="/api/reactive/effect">effect</a>.
 
 ```typescript
-import { resource, signal, effect } from "@hellajs/core";
+import { signal, effect } from "@hellajs/core";
+import { resource } from "@hellajs/resource";
 
 // Reactive key for fetching user
 const userId = signal("1");

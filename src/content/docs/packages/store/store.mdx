@@ -19,7 +19,7 @@ store<T extends object = {}>(initial: T): Store<T>
 Create a deeply reactive object with nested <a href="/api/reactive/signal">signal</a>-like properties. Each property is a signal, and you can update, set, or read the entire store or any nested value. Use <code>computed()</code> to get a plain snapshot.
 
 ```typescript
-import { store } from '@hellajs/core';
+import { store } from '@hellajs/store';
 
 // Create a nested store
 const userStore = store({
@@ -50,9 +50,3 @@ userStore.address.street.set('789 Oak St');
 console.log(userStore.address.street());
 // '789 Oak St'
 ```
-
-<p>
-See also: 
-<a href="/api/reactive/signal">signal</a>, 
-<a href="/api/reactive/computed">computed</a>
-</p>

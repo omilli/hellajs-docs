@@ -27,12 +27,17 @@ export default defineConfig({
 					label: 'Learn',
 					autogenerate: { directory: 'learn' },
 				},
-
 				{
-					label: 'API',
-					autogenerate: { directory: 'api' },
-				},
-			],
+					label: 'Packages',
+					items: [
+						{ label: '@hellajs/core', autogenerate: { directory: 'packages/core' } },
+						{ label: '@hellajs/dom', autogenerate: { directory: 'packages/dom' } },
+						{ label: '@hellajs/store', autogenerate: { directory: 'packages/store' } },
+						{ label: '@hellajs/resource', autogenerate: { directory: 'packages/resource' } },
+						{ label: '@hellajs/router', autogenerate: { directory: 'packages/router' } },
+					]
+				}
+			]
 		}),
 	],
 

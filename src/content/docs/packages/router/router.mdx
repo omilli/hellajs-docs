@@ -46,7 +46,8 @@ router(
 Set up client-side routing with route handlers, hooks, redirects, and 404 handling. Use with <a href="/api/router/route">route</a> for reactive route info and <a href="/api/router/navigate">navigate</a> for programmatic navigation.
 
 ```typescript
-import { router, route } from "@hellajs/core";
+import { effect } from "@hellajs/core";
+import { router, route } from "@hellajs/router";
 
 // Define routes and handlers
 router({
@@ -70,7 +71,6 @@ router({
 });
 
 // Access current route reactively
-import { effect } from "@hellajs/core";
 effect(() => {
   const r = route();
   console.log(r.path, r.params, r.query);

@@ -19,8 +19,8 @@ mount(vNode: VNode | (() => VNode), rootSelector?: string): void
 Mount a DOM tree to a real DOM node. Use with <a href="/api/reactive/signal">signal</a> for reactivity.
 
 ```typescript
-import { mount, html } from '@hellajs/core';
 import { signal } from '@hellajs/core';
+import { mount, html } from '@hellajs/dom';
 
 const { div, h1, button } = html;
 

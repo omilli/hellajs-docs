@@ -28,7 +28,7 @@ export const html: {
 Use <code>html</code> to create elements, set attributes, and nest children. Supports fragments and arrays.
 
 ```typescript
-import { html } from '@hellajs/core';
+import { html } from '@hellajs/dom';
 const { div, input, button } = html;
 
 const form = div(
@@ -58,7 +58,7 @@ You can inject raw HTML strings into an element using the `html` prop. This bypa
 :::
 
 ```typescript
-import { html } from '@hellajs/core';
+import { html } from '@hellajs/dom';
 
 // Insert raw HTML content
 const content = html.div({
