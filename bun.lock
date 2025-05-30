@@ -7,7 +7,8 @@
         "@astrojs/starlight": "^0.34.0",
         "@astrojs/starlight-tailwind": "^4.0.0",
         "@fontsource-variable/mulish": "^5.2.5",
-        "@hellajs/core": "^0.6.2",
+        "@hellajs/core": "^0.8.0",
+        "@hellajs/dom": "^0.8.1",
         "@tailwindcss/vite": "^4.1.4",
         "astro": "^5.6.1",
         "sharp": "^0.32.5",
@@ -110,7 +111,9 @@
 
     "@fontsource-variable/mulish": ["@fontsource-variable/mulish@5.2.5", "", {}, "sha512-EgTJOY/KgTiYPVZpqds0HCa8cCO7lv775j3I4T6HYRnnKjBnc8SjOc6bFcZfT96doRhD6QKJiy8UGcRatjJROg=="],
 
-    "@hellajs/core": ["@hellajs/core@0.6.2", "", {}, "sha512-ItRLb5K/FKcbDse5npwNt1+o/WTgH442w2cDfnE0KV8oZnxpYa5NFDU18aqXU5FfKsjvwkntehuvR3yNjmKruA=="],
+    "@hellajs/core": ["@hellajs/core@0.8.0", "", {}, "sha512-kmagtJ868/mnJsJ25Ek1yCjf2spbveSl/ziVErAp55uUtFJ1FM0U0lR8YnlVvNp1ezCtrCQW2pC9R2AZg2YTCA=="],
+
+    "@hellajs/dom": ["@hellajs/dom@0.8.1", "", { "peerDependencies": { "@hellajs/core": "^0.8.0" } }, "sha512-PN7ZVuJ+beQP9mN1dKGcx6zci5agjW8bhyBPWUyTJhLO6mxLDkKy5DUBEK/2d34t6nWV3erDqiTOtxpUTL/43A=="],
 
     "@img/sharp-darwin-arm64": ["@img/sharp-darwin-arm64@0.33.5", "", { "optionalDependencies": { "@img/sharp-libvips-darwin-arm64": "1.0.4" }, "os": "darwin", "cpu": "arm64" }, "sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ=="],
 

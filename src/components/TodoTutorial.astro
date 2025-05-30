@@ -1,8 +1,8 @@
 <div id="todo"></div>
 
 <script>
-  import { signal, effect, html, forEach, show, mount } from "@hellajs/core";
-
+  import { signal, effect } from "@hellajs/core";
+  import { html, forEach, show, mount } from "@hellajs/dom";
   const { div, input, button, ul, li, p } = html;
 
   function Todo() {
