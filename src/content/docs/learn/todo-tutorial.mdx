@@ -23,7 +23,7 @@ function Todo() {
 
   const todoCount = () => todos().length;
   const hasTodos = () => todoCount() > 0;
-  const isDisabled = () => !inputValue();
+  const isDisabled = () => inputValue() === "";
 
   effect(() => {
     console.log("Todo count:", todoCount());
@@ -115,7 +115,7 @@ function Todo() {
 
   const todoCount = () => todos().length;
   const hasTodos = () => todoCount() > 0;
-  const isDisabled = () => !inputValue();
+  const isDisabled = () => inputValue() === "";
 
   effect(() => {
     console.log("Todo count:", todoCount());
