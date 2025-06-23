@@ -27,7 +27,7 @@ const { div, h1, button } = html;
 const count = signal(0);
 
 const increment = () => {
-  count.set(count() + 1);
+  count(count() + 1);
 };
 
 const App = () => {

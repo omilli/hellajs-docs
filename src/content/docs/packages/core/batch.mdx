@@ -29,15 +29,15 @@ const isSuccess = signal(false);
 
 function submitForm() {
   batch(() => {
-    isSubmitting.set(true);
+    isSubmitting(true);
 
     // Simulate async form submission
     setTimeout(() => {
       batch(() => {
-        isSubmitting.set(false);
-        isSuccess.set(true);
-        username.set('');
-        email.set('');
+        isSubmitting(false);
+        isSuccess(true);
+        username('');
+        email('');
       });
     }, 1000);
   });

@@ -33,12 +33,12 @@ const cleanup = effect(() => {
 });
 // Logs: "The count is: 0" (initial run)
 
-count.set(1);
+count(1);
 // Logs: "The count is: 1"
 
 // Stop the effect from running
 cleanup();
 
 // No longer logs anything
-count.set(2);
+count(2);
 ```

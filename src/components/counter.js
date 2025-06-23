@@ -13,7 +13,7 @@ const Counter = function () {
 
   // Modify state
   const setCount = (change) => {
-    count.set(count() + change);
+    count(count() + change);
   };
 
   // Functions make nodes reactive

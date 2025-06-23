@@ -14,12 +14,12 @@
     const isDisabled = () => !inputValue();
 
     const setInput = (e: InputEvent) => {
-      inputValue.set((e.target as HTMLInputElement)?.value);
+      inputValue((e.target as HTMLInputElement)?.value);
     };
 
     const addTodo = () => {
-      todos.set([...todos(), inputValue()]);
-      inputValue.set("");
+      todos([...todos(), inputValue()]);
+      inputValue("");
     };
 
     effect(() => {

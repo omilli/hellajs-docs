@@ -36,9 +36,9 @@ effect(() => {
 
 // Effect runs, logs: "Count: 0, Threshold: 10"
 
-count.set(1);
+count(1);
 // Effect runs, logs: "Count: 1, Threshold: 10"
 
-threshold.set(20);
+threshold(20);
 // Effect doesn't run, since threshold was read via untracked
 ```

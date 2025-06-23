@@ -39,12 +39,12 @@ Now let's create some functions to `setInput` and `addTodo`. For this simple exa
 // ....continued...
 
 const setInput = (event) => {
-  inputValue.set(event.target.value);
+  inputValue(event.target.value);
 };
 
 const addTodo = () => {
-  todos.set([...todos(), inputValue()]);
-  inputValue.set("");
+  todos([...todos(), inputValue()]);
+  inputValue("");
 };
 ```
 
@@ -122,12 +122,12 @@ function Todo() {
   });
 
   const setInput = (event) => {
-    inputValue.set(event.target.value);
+    inputValue(event.target.value);
   };
 
   const addTodo = () => {
-    todos.set([...todos(), inputValue()]);
-    inputValue.set("");
+    todos([...todos(), inputValue()]);
+    inputValue("");
   };
 
   return div(

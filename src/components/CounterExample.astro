@@ -13,7 +13,7 @@
 
   const count = signal(0);
 
-  const setCount = (change: number) => count.set(count() + change);
+  const setCount = (change: number) => count(count() + change);
 
   const styles = {
     button: tw`mx-2 rounded bg-[var(--sl-color-text-accent)] py-2 px-4 border border-transparent text-center text-sm text-[var(--sl-color-black)] font-semibold active:transition-transform active:scale-90 md:mx-6`,

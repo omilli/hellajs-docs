@@ -44,7 +44,7 @@ const { div, button } = html;
 const isVisible = signal(false);
 
 const toggleVisibility = () => {
-  isVisible.set(!isVisible());
+  isVisible(!isVisible());
 };
 
 const App = div(
