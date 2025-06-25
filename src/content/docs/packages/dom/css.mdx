@@ -1,0 +1,97 @@
+---
+title: css
+description: Define and inject CSS rules and variables from JS objects.
+---
+
+<p class="subtitle">Define and inject CSS rules and variables from JS objects.</p>
+
+```typescript
+/**
+ * Define and inject CSS rules from JS objects.
+ * @param obj CSS rules as an object.
+ * @param options Optional: { name, scoped, global }
+ * @returns The generated class name (unless global)
+ */
+export function css(obj: CSSObject, options?: CSSOptions): string
+
+/**
+ * Inject CSS custom properties (variables) globally.
+ * @param vars Object of variables (can be nested)
+ * @returns Object mapping keys to var(--key) references
+ */
+export function cssVars(vars: Record<string, any>): Record<string, string>
+```
+
+## Usage
+
+Use <code>css</code> to generate a class and inject styles. Supports nesting, pseudo-selectors, and media queries.
+
+```typescript
+import { css, cssVars } from '@hellajs/dom/css';
+
+const className = css({
+  color: 'red',
+  ':hover': {
+    color: 'blue'
+  },
+  $span: {
+    color: 'green'
+  },
+  '@media (max-width: 600px)': {
+    color: 'purple'
+  }
+});
+
+cssVars({
+  primary: '#0070f3',
+  borderRadius: '8px',
+  theme: {
+    accent: 'hotpink',
+    spacing: 4
+  }
+});
+```
+
+This injects:
+
+```css
+.c1{color:red;}
+.c1:hover{color:blue;}
+.c1 span{color:green;}
+@media (max-width: 600px){.c1{color:purple;}}
+:root {
+  --primary: #0070f3;
+  --borderRadius: 8px;
+  --theme-accent: hotpink;
+  --theme-spacing: 4;
+}
+```
+
+Returns an object mapping each key to its <code>var(--key)</code> reference:
+
+```typescript
+const vars = cssVars({ foo: 'red' });
+console.log(vars.foo); // 'var(--foo)'
+```
+
+## Options
+
+- <code>name</code>: Use a custom class name instead of a generated one.
+- <code>scoped</code>: Scope the class to a parent selector (string or boolean).
+- <code>global</code>: Inject global styles (no class name returned).
+
+## Remove styles
+
+Remove styles for a given object:
+
+```typescript
+css.remove(obj);
+```
+
+## Reset all styles and variables
+
+```typescript
+import { cssReset, cssVarsReset } from '@hellajs/dom/css';
+cssReset();
+cssVarsReset();
+```
