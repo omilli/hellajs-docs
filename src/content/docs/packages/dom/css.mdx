@@ -22,9 +22,13 @@ export function css(obj: CSSObject, options?: CSSOptions): string
 export function cssVars(vars: Record<string, any>): Record<string, string>
 ```
 
+- `name`: Use a custom class name instead of a generated one.
+- `scoped`: Scope the class to a parent selector (string).
+- `global`: Inject global styles (no class name returned).
+
 ## Usage
 
-Use <code>css</code> to generate a class and inject styles. Supports nesting, pseudo-selectors, and media queries.
+Use `css` to generate styles. Supports nesting, pseudo-selectors, and media queries.
 
 ```typescript
 import { css, cssVars } from '@hellajs/dom/css';
@@ -55,10 +59,20 @@ cssVars({
 This injects:
 
 ```css
-.c1{color:red;}
-.c1:hover{color:blue;}
-.c1 span{color:green;}
-@media (max-width: 600px){.c1{color:purple;}}
+.c1 {
+  color: red;
+}
+.c1:hover {
+  color: blue;
+}
+.c1 span {
+  color: green;
+}
+@media (max-width: 600px) {
+  .c1 {
+    color: purple;
+  }
+}
 :root {
   --primary: #0070f3;
   --borderRadius: 8px;
@@ -67,18 +81,86 @@ This injects:
 }
 ```
 
-Returns an object mapping each key to its <code>var(--key)</code> reference:
+Use <code>$tag</code> keys to target HTML elements as descendants of your generated class:
+
+```typescript
+const className = css({
+  color: 'red',
+  $span: {
+    color: 'green'
+  },
+  $div: {
+    background: 'yellow'
+  }
+});
+```
+
+This injects:
+
+```css
+.c1 {
+  color: red;
+}
+.c1 span {
+  color: green;
+}
+.c1 div {
+  background: yellow;
+}
+```
+
+
+Use <code>&</code> in keys to reference the current class for more complex selectors:
+
+```typescript
+const className = css({
+  color: 'red',
+  '&.foo, &.bar': {
+    color: 'purple'
+  },
+});
+```
+
+This injects:
+
+```css
+.c1 {
+  color: red;
+}
+.c1.foo {
+  color: purple;
+}
+.c1.bar {
+  color: purple;
+}
+```
+
+## Return Values
+
+`css` returns the generated class name (unless `global` is set, in which case it returns an empty string):
+
+```typescript
+const className = css({
+  color: 'red'
+});
+console.log(className); // e.g. 'c1'
+
+const globalResult = css({
+  $body: {
+    margin: 0
+  }
+}, {
+  global: true
+});
+console.log(globalResult); // ''
+```
+
+`cssVars` returns an object mapping each key to its `var(--key)` reference:
 
 ```typescript
 const vars = cssVars({ foo: 'red' });
 console.log(vars.foo); // 'var(--foo)'
 ```
-
-## Options
-
-- <code>name</code>: Use a custom class name instead of a generated one.
-- <code>scoped</code>: Scope the class to a parent selector (string or boolean).
-- <code>global</code>: Inject global styles (no class name returned).
 
 ## Remove styles
 
