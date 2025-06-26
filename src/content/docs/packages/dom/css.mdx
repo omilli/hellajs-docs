@@ -9,7 +9,10 @@ description: Define and inject CSS rules and variables from JS objects.
 /**
  * Define and inject CSS rules from JS objects.
  * @param obj CSS rules as an object.
- * @param options Optional: { name, scoped, global }
+ * @param options Optional:
+ * - name: Use a custom class name instead of a generated one.
+ * - scoped: Scope the class to a parent selector (string).
+ * - global: Inject global styles (no class name returned).
  * @returns The generated class name (unless global)
  */
 export function css(obj: CSSObject, options?: CSSOptions): string
@@ -21,10 +24,6 @@ export function css(obj: CSSObject, options?: CSSOptions): string
  */
 export function cssVars(vars: Record<string, any>): Record<string, string>
 ```
-
-- `name`: Use a custom class name instead of a generated one.
-- `scoped`: Scope the class to a parent selector (string).
-- `global`: Inject global styles (no class name returned).
 
 ## Usage
 
@@ -170,7 +169,7 @@ Remove styles for a given object:
 css.remove(obj);
 ```
 
-## Reset all styles and variables
+## Reset
 
 ```typescript
 import { cssReset, cssVarsReset } from '@hellajs/dom/css';

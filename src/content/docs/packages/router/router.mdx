@@ -14,11 +14,12 @@ description: Minimal client-side router with hooks, params, and redirects.
  *   - before: Optional per-route before hook.
  *   - after: Optional per-route after hook.
  *   - string: Redirect path.
- * @param options Optional global hooks, 404 handler, and redirects.
+ * @param options Optional:
  *   - before: Global before hook.
  *   - after: Global after hook.
  *   - 404: Not found handler.
  *   - redirects: Array of { from: string[], to: string }
+ *   - hash: Optional hash mode (default false).
  * @returns RouteInfo
  */
 router(
