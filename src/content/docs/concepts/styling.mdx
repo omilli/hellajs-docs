@@ -1,74 +1,64 @@
 ---
-title: Events
-description: HellaJS is modular, additional packages extend core reactivity.
+title: Styling
+description: Types-safe CSS-in-JS with a tiny runtime footprint.
 ---
 
-HellaJS is modular and can be used in various ways. The core package provides reactive functionality like signals and effects. Additional packages extend its capabilities.
+The `class` prop takes a string, array or a function that returns a string or array.
 
-:::caution[Dependencies]
-`@hellajs/core` is a required dependency for other HellaJS packages.
-:::
+```jsx
+const Button = () => {
+  const isPrimary = signal(true);
 
-## Core
-
-[Core Docs](/packages/core/signal)
-
-<div class="flex gap-2 items-center ">
-  <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/core" />
-  <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/core@latest" />
-</div>
-
-```bash
-npm install @hellajs/core
+  return (
+    <button class={() => ['button', isPrimary() ? 'primary' : 'secondary']}>
+      Click me
+    </button>
+  );
+};
 ```
 
-## DOM
+## CSS Package
 
-[DOM Docs](/packages/dom/mount)
+Use the `css` function for type-safe CSS-in-JS styling. It has a tiny runtime footprint and supports deeply nested dynamic styles.
 
-<div class="flex gap-2 items-center ">
-  <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/dom" />
-  <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/dom@latest" />
-</div>
+```jsx
+const theme = cssVars({
+  primary: {
+    color: 'blue',
+    shade: 'darkblue',
+    accent: 'white'
+  },
+  borderRadius: {
+    sm: '3px',
+    md: '5px',
+    lg: '10px'
+  },
+  spacing: {
+    sm: '4px',
+    md: '8px',
+    lg: '12px'
+  }
+});
 
-```bash
-npm install @hellajs/dom
-```
-
-## Resource
-
-[Resource Docs](/packages/resource/resource)
-
-<div class="flex gap-2 items-center ">
-  <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/resource" />
-  <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/resource@latest" />
-</div>
-
-```bash
-npm install @hellajs/resource
-```
-
-## Router
-
-[Router Docs](/packages/router/router)
-
-<div class="flex gap-2 items-center ">
-  <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/router" />
-  <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/router@latest" />
-</div>
-
-```bash
-npm install @hellajs/router
-```
-## Store
-
-[Store Docs](/packages/store/store)
-
-<div class="flex gap-2 items-center ">
-  <img alt="npm version" src="https://img.shields.io/npm/v/@hellajs/store" />
-  <img class="mt-0" alt="" src="https://img.shields.io/bundlephobia/minzip/@hellajs/store@latest" />
-</div>
-
-```bash
-npm install @hellajs/store
-```
+const buttonStyle = css({
+  backgroundColor: theme.primary.color,
+  color: theme.primary.accent,
+  padding: theme.spacing.md,
+  borderRadius: theme.borderRadius.md,
+    ":hover" {
+    backgroundColor: theme.primary.shade
+  },
+  ".icon": {
+    marginRight: theme.spacing.md
+  },
+  "@media (max-width: 600px)": {
+    padding: theme.spacing.sm,
+    ".icon": {
+      marginRight: theme.spacing.sm
+    }
+  }
+});
+//...
+<button class={buttonStyle}>
+  Click me
+</button>
