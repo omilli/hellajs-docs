@@ -32,21 +32,21 @@ mount(Counter, "#counter");
 ## Project Goals
 
 - **Quick**: Comparable speed to the most popular frameworks.
-- **Lightweight**: Tiny bundles due to it's modular architechture.
+- **Lightweight**: Tiny bundles due to its modular architecture.
 - **Efficient**: Low memory consumption and fast first paint.
 - **Simple**: Familiar and friendly developer experience.
-- **Composable**: Largely unopinonated and easy extendable.
-- **Tested**: Over 130 tests and +95% test coverage.
+- **Composable**: Largely unopinionated and easily extendable.
+- **Tested**: Over 130 tests and 95%+ test coverage.
 - **Documented**: Clear and concise documentation with examples.
 
 
 ## Core Concepts
 
-The development experience with JSX is familiar to anyone coming from React or Solid, but it's less opinionated and requires no compiler if you use `html` proxy elements.
+The development experience with JSX is familiar to anyone coming from React or Solid, but it's less opinionated and requires no compiler if you use [html](/packages/dom/html) proxy elements.
 
-The core concept are reactivity and granular DOM updates.`mount` is a one-time operation and elements only react when their text content or an attribute are a `signal` or derived function.
+The core concepts are reactivity and granular DOM updates. [mount](/packages/dom/mount) is a one-time operation, and elements only react when their text content or an attribute is a [signal](/packages/core/signal) or derived function.
 
-Instead of a virtual DOM, HellaJS using a lightweight node registry and components are automatically cleaned after they are removed from the DOM.
+Instead of a virtual DOM, HellaJS uses a lightweight node registry, and components are automatically cleaned up after they are removed from the DOM.
 
 ## Packages
 
@@ -62,6 +62,4 @@ Instead of a virtual DOM, HellaJS using a lightweight node registry and componen
 
 ## What's Next?
 
-Check out the `Quick Start` guide. You'll learn how to set up your project, create components, and manage state. If you're looking for more advanced topics, the see concept pages, they cover the core ideas behind HellaJS, including reactivity, templating and more.
-
-Take a look at the krautest benchmark results to see how HellaJS compares to other frameworks. Or take a at the `Todo turtorial` or `Real World App`.
+Check out the [Quick Start](/learn/quick-start) guide or [Todo Tutorial](/learn/todo-tutorial). You'll learn how to set up your project, create components, and manage state. If you're looking for more advanced topics, see the concept pages—they cover the core ideas behind HellaJS, including reactivity, templating, and more.

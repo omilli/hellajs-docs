@@ -1,9 +1,9 @@
 ---
 title: Styling
-description: Types-safe CSS-in-JS with a tiny runtime footprint.
+description: Type-safe CSS-in-JS with a tiny runtime footprint.
 ---
 
-The `class` prop takes a string, array or a function that returns a string or array.
+The `class` prop takes a string, an array, or a function that returns a string or array.
 
 ```jsx
 const Button = () => {
@@ -19,7 +19,7 @@ const Button = () => {
 
 ## CSS Package
 
-Use the `css` function for type-safe CSS-in-JS styling. It has a tiny runtime footprint and supports deeply nested dynamic styles.
+Use the [css](/packages/css/css) package for type-safe CSS-in-JS styling. It has a tiny runtime footprint and supports deeply nested dynamic styles.
 
 ```jsx
 const theme = cssVars({
@@ -45,15 +45,15 @@ const buttonStyle = css({
   color: theme.primary.accent,
   padding: theme.spacing.md,
   borderRadius: theme.borderRadius.md,
-    ":hover" {
+  ':hover': {
     backgroundColor: theme.primary.shade
   },
-  ".icon": {
+  '.icon': {
     marginRight: theme.spacing.md
   },
-  "@media (max-width: 600px)": {
+  '@media (max-width: 600px)': {
     padding: theme.spacing.sm,
-    ".icon": {
+    '.icon': {
       marginRight: theme.spacing.sm
     }
   }
@@ -62,3 +62,4 @@ const buttonStyle = css({
 <button class={buttonStyle}>
   Click me
 </button>
+```

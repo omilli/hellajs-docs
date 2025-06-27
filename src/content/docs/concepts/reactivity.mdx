@@ -5,14 +5,14 @@ description: Predictable, composable reactivity for simple or complex state.
 
 import { Aside } from '@astrojs/starlight/components';
 
-The HellaJS reactive core and store packages are predictable, composable and easy to use for both simple and complex state management.
+The HellaJS reactive core and store packages are predictable, composable, and easy to use for both simple and complex state management.
 
-This isn't a guide to reactivity in general, but rather how HellaJS implements it. If you're new to reactivity, check out the some other resources.
+This isn't a guide to reactivity in general, but rather how HellaJS implements it. If you're new to reactivity, check out some other resources.
 
 <div class="mt-6">
   <Aside type="note" title="Note">
     <p>
-      The core package is a modified fork of `Alien Signals`. Credit to that fine work!
+      The core package is a modified fork of <a href="https://github.com/stackblitz/alien-signals" target="_blank">Alien Signals</a>. Credit to that fine work!
     </p>
   </Aside>
 </div>
@@ -31,7 +31,7 @@ effect(() => {
 count(1); // Logs: Count: 1, Double Count: 2
 ```
 
-You don't need to use `computed` inside a component, just a function that uses a signal.
+You don't need to use [computed](/packages/core/computed) inside a component, just a function that uses a signal.
 
 ``` jsx
 const Counter = () => {

@@ -6,13 +6,13 @@ description: Familiar JSX templating with function-based reactivity.
 import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
 
-HellaJS has it's own flavor of JSX templating, which is similar to React and Solid. It uses a function-based approach to create reactive components.
+HellaJS has its own flavor of JSX templating, which is similar to React and Solid. It uses a function-based approach to create reactive components.
 
-There's also a `html` proxy element that allows you to use HellaJS without a compiler, which is useful when you want to avoid the overhead of a build step.
+There's also an [html](/packages/dom/html) proxy element that allows you to use HellaJS without a compiler, which is useful when you want to avoid the overhead of a build step.
 
 <Aside type="note" title="Note">
   <p>
-    We'll use the JSX syntax in this guide, but you can use the `html` proxy element.
+    We'll use the JSX syntax in this guide, but you can also use the [html](/packages/dom/html) proxy element.
   </p>
 </Aside>
 
@@ -48,9 +48,9 @@ mount(Counter, '#counter');
 
 ## Components
 
-Components are functions that return a JSX element or a `html` proxy. Any element that uses a signal or derived function for text content or attributes becomes reactive. 
+Components are functions that return a JSX element or an [html](/packages/dom/html) proxy. Any element that uses a signal or derived function for text content or attributes becomes reactive. 
 
-There's no virtual DOM and `mount` is a one-time operation. They have their own reactive scope and are auto-cleaned when removed.
+There's no virtual DOM, and [mount](/packages/dom/mount) is a one-time operation. Components have their own reactive scope and are auto-cleaned when removed.
 
 
 ``` jsx
@@ -62,7 +62,7 @@ const Counter = (props, children) => {
   const countClass = () => count() % 2 === 0 ? 'even' : 'odd';
 
   return (
-    {/* Attach functions for reactivity, dont call them */}
+    {/* Attach functions for reactivity, don't call them */}
     <div class={countClass}>
       <p>Count: {count}</p>
       <p>Double Count: {doubleCount}</p>
@@ -78,7 +78,7 @@ mount(Counter, "#counter");
 
 ## Conditionals
 
-Since functions make elements dynamic, you can use plain JavaScript conditionals like `if/elements` or `switch`, just return an element. 
+Since functions make elements dynamic, you can use plain JavaScript conditionals like `if` or `switch`—just return an element. 
 
 ``` jsx
 const isShown = signal(true);
@@ -100,7 +100,7 @@ const items = ['Item 1', 'Item 2', 'Item 3'];
 ```
 ## Dynamic
 
-Components are just functions so you can use them dynamically without any extra modules.
+Components are just functions, so you can use them dynamically without any extra modules.
 
 ``` jsx
 const components = {
@@ -114,7 +114,7 @@ const active = signal("profile");
 </main>
 ```
 
-Use the `html` proxy if you want dynamic html elements.
+Use the [html](/packages/dom/html) proxy if you want dynamic HTML elements.
 ``` jsx
 const tags = ['div', 'section', 'aside'];
 const selectedTag = signal('div');
@@ -122,3 +122,4 @@ const selectedTag = signal('div');
 <main>
   {() => html[selectedTag()]("This is dynamic")}
 </main>
+```
