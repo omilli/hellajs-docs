@@ -48,36 +48,27 @@ const addTodo = () => {
 
 ## Templating
 
-Create the UI using JSX. Update the imports to include the JSX pragma for HellaJS. You can use the elements directly in JSX. For looping, use `{todos().map(...)}` and for conditional rendering, use ternaries or logical `&&`.
-
-```jsx
-/** @jsxImportSource @hellajs/dom */
-import { signal, effect } from "@hellajs/core";
-```
-For dynamic attributes and text, use curly braces in JSX. Here are a couple of ways to handle dynamic strings:
+For dynamic attributes and text, use curly braces and functions, but don't call them directly. HellaJS will automatically track dependencies and update the DOM when the values change.
 
 ```jsx
 // ...continued...
 
 return (
   <div>
-    {/* use template strings */}
-    <p>{`Todo List (${todoCount()})`}</p>
-    {/* or the p(...children) spread pattern */}
-    <p>Todo List ({todoCount()})</p>
+    <p>Todo List ({todoCount})</p>
     <div>
       <input
         type="text"
-        value={inputValue()}
+        value={inputValue}
         onInput={setInput}
       />
-      <button onClick={addTodo} disabled={isDisabled()}>
+      <button onClick={addTodo} disabled={isDisabled}>
         Add
       </button>
     </div>
-    {hasTodos() ? (
+    {() => hasTodos() ? (
       <ul>
-        {todos().map((todo) => (
+        {forEach(todos, (todo) => (
           <li>{todo}</li>
         ))}
       </ul>
@@ -93,8 +84,6 @@ return (
 Add [mount](/api/dom/mount/) to your imports and pass the `Todo` function reference. By default, mount looks for `#app` element but you can pass any element id as a querySelector.
 
 ```jsx
-/** @jsxImportSource @hellajs/dom */
-import { signal, effect } from "@hellajs/core";
 import { mount } from "@hellajs/dom";
 
 function Todo() {
@@ -107,7 +96,6 @@ mount(Todo, '#todo');
 ## Full Example
 
 ```jsx
-/** @jsxImportSource @hellajs/dom */
 import { signal, effect } from "@hellajs/core";
 import { mount } from "@hellajs/dom";
 
@@ -134,20 +122,20 @@ function Todo() {
 
   return (
     <div>
-      <p>Todo List ({todoCount()})</p>
+      <p>Todo List ({todoCount})</p>
       <div>
         <input
           type="text"
-          value={inputValue()}
+          value={inputValue}
           onInput={setInput}
         />
-        <button onClick={addTodo} disabled={isDisabled()}>
+        <button onClick={addTodo} disabled={isDisabled}>
           Add
         </button>
       </div>
-      {hasTodos() ? (
+      {() => hasTodos() ? (
         <ul>
-          {todos().map((todo) => (
+          {forEach(todos, (todo) => (
             <li>{todo}</li>
           ))}
         </ul>

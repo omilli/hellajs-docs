@@ -18,7 +18,7 @@ mount(vNode: VNode | (() => VNode), rootSelector?: string): void
 
 Mount a DOM tree to a real DOM node. Use with <a href="/api/reactive/signal">signal</a> for reactivity.
 
-```typescript
+``` jsx
 import { signal } from '@hellajs/core';
 import { mount, html } from '@hellajs/dom';
 
@@ -31,9 +31,11 @@ const increment = () => {
 };
 
 const App = () => {
-  return div(
-    h1(`Count: ${count()}`),
-    button({ onClick: increment }, 'Increment')
+  return (
+    <div>
+      <h1>Count: {count()}</h1>
+      <button onClick={increment}>Increment</button>
+    </div>
   );
 };
 

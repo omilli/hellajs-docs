@@ -1,0 +1,38 @@
+---
+title: Quick Start
+description: build a simple Todo app with HellaJS using a few core concepts.
+---
+
+HellaJS is unopinonated in terms of setup and architechture. All you need to do is install the core and dom packages to any project and have a mount element in your html
+
+```bash
+npm install @hellajs/core @hellajs/dom
+```
+Then somewhere in your HTML.
+
+```html
+<div id="app"></div>
+```
+
+Now somewhere to your project.
+
+```jsx
+import { signal } from "@hellajs/core";
+import { mount } from "@hellajs/dom";
+
+const App = () => {
+  const count = signal(0);
+
+  return (
+    <button onClick={() => count(count() + 1)}>{count}</button>
+  );
+};
+
+mount(App, "#app");
+```
+
+You can now run your project and see the button that increments the count when clicked.
+
+That's all there is to it!
+
+

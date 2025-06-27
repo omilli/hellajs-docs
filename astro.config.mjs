@@ -29,7 +29,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Quick Start', link: '/learn/quick-start' },
 						{ label: 'Todo Tutorial', link: '/learn/todo-tutorial' },
-						{ label: 'Real World App', link: '/learn/real-world-app' },
+						// { label: 'Real World App', link: '/learn/real-world-app' },
 					]
 				},
 				{
@@ -43,14 +43,14 @@ export default defineConfig({
 						{ label: 'store', autogenerate: { directory: 'packages/store' } },
 					]
 				},
-				{
-					label: 'Plugins',
-					items: [
-						{ label: 'Babel', link: '/plugins/babel' },
-						{ label: 'Rollup', link: '/plugins/rollup' },
-						{ label: 'Vite', link: '/plugins/vite' },
-					]
-				},
+				// {
+				// 	label: 'Plugins',
+				// 	items: [
+				// 		{ label: 'Babel', link: '/plugins/babel' },
+				// 		{ label: 'Rollup', link: '/plugins/rollup' },
+				// 		{ label: 'Vite', link: '/plugins/vite' },
+				// 	]
+				// },
 			]
 		}),
 	],

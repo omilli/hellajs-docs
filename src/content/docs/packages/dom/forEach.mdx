@@ -95,15 +95,15 @@ const UserList = ul(
 
 You can also set the key directly on the element.
 
-```typescript
+``` jsx
 const users = signal([
   { index: 1, name: 'Alice' },
   { index: 2, name: 'Bob' }
 ]);
 
-const List = ul(
-  forEach(users, (item) =>
-    li({ key: item.index }, `Item ${item.name}`)
-  )
-);
+<ul>
+  {forEach(users, (item) =>
+    <li>({ key: item.index }, `Item ${item.name}`)</li>
+  )}
+</ul>;
 ```
