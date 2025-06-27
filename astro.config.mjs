@@ -21,9 +21,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Reactivity', link: '/concepts/reactivity' },
 						{ label: 'Templates', link: '/concepts/templates' },
-						{ label: 'Styling', link: '/concepts/styling' },
-						{ label: 'Routing', link: '/concepts/routing' },
-						{ label: 'Resources', link: '/concepts/resources' }
+						{ label: 'Styling', link: '/concepts/styling' }
 					]
 				},
 				{
@@ -31,7 +29,6 @@ export default defineConfig({
 					items: [
 						{ label: 'Quick Start', link: '/learn/quick-start' },
 						{ label: 'Todo Tutorial', link: '/learn/todo-tutorial' },
-						{ label: 'Blog Tutorial', link: '/learn/blog-tutorial' },
 						{ label: 'Real World App', link: '/learn/real-world-app' },
 					]
 				},

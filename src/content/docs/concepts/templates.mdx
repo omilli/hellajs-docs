@@ -50,9 +50,7 @@ mount(Counter, '#counter');
 
 Components are functions that return a JSX element or a `html` proxy. Any element that uses a signal or derived function for text content or attributes becomes reactive. 
 
-They have their own reactive scope and are auto-cleaned when removed from the DOM.
-
-There's no virtual DOM and `mount` is a one-time operation. You can mount a component to an element in the DOM using the `mount` function.
+There's no virtual DOM and `mount` is a one-time operation. They have their own reactive scope and are auto-cleaned when removed.
 
 
 ``` jsx
