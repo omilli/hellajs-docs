@@ -15,28 +15,45 @@ export default defineConfig({
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/omilli/hellajs' }],
 			customCss: ['./src/styles/global.css'],
 			sidebar: [
+				{ label: 'Overview', link: '/' },
 				{
-					label: 'Quick Start',
-					link: '/',
-				},
-				{
-					label: 'Overview',
-					autogenerate: { directory: 'overview' },
+					label: 'Concepts',
+					items: [
+						{ label: 'Reactivity', link: '/concepts/reactivity' },
+						{ label: 'Templates', link: '/concepts/templates' },
+						{ label: 'Styling', link: '/concepts/styling' },
+						{ label: 'Routing', link: '/concepts/routing' },
+						{ label: 'Resources', link: '/concepts/resources' }
+					]
 				},
 				{
 					label: 'Learn',
-					autogenerate: { directory: 'learn' },
+					items: [
+						{ label: 'Quick Start', link: '/learn/quick-start' },
+						{ label: 'Todo Tutorial', link: '/learn/todo-tutorial' },
+						{ label: 'Blog Tutorial', link: '/learn/blog-tutorial' },
+						{ label: 'Real World App', link: '/learn/real-world-app' },
+					]
 				},
 				{
 					label: 'Packages',
 					items: [
-						{ label: '@hellajs/core', autogenerate: { directory: 'packages/core' } },
-						{ label: '@hellajs/dom', autogenerate: { directory: 'packages/dom' } },
-						{ label: '@hellajs/resource', autogenerate: { directory: 'packages/resource' } },
-						{ label: '@hellajs/router', autogenerate: { directory: 'packages/router' } },
-						{ label: '@hellajs/store', autogenerate: { directory: 'packages/store' } },
+						{ label: 'core', autogenerate: { directory: 'packages/core' } },
+						{ label: 'dom', autogenerate: { directory: 'packages/dom' } },
+						{ label: 'css', autogenerate: { directory: 'packages/css' } },
+						{ label: 'resource', autogenerate: { directory: 'packages/resource' } },
+						{ label: 'router', autogenerate: { directory: 'packages/router' } },
+						{ label: 'store', autogenerate: { directory: 'packages/store' } },
 					]
-				}
+				},
+				{
+					label: 'Plugins',
+					items: [
+						{ label: 'Babel', link: '/plugins/babel' },
+						{ label: 'Rollup', link: '/plugins/rollup' },
+						{ label: 'Vite', link: '/plugins/vite' },
+					]
+				},
 			]
 		}),
 	],

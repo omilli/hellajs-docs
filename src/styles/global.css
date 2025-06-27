@@ -153,69 +153,6 @@
   --sl-z-index-skiplink: 20;
 }
 
-:root[data-theme='light'],
-[data-theme='light'] ::backdrop {
-  /* Colours (light mode) */
-  /* Map to Tailwind Slate palette (Light Mode) */
-  --sl-color-white: hsl(224, 10%, 10%);
-  /* white */
-  --sl-color-gray-1: hsl(222.2 47.4% 11.2%);
-  /* slate-900 - Used for text */
-  --sl-color-gray-2: hsl(222.2 47.4% 19.8%);
-  /* slate-800 */
-  --sl-color-gray-3: hsl(222.2 47.4% 31.2%);
-  /* slate-700 */
-  --sl-color-gray-4: hsl(222.2 47.4% 56.3%);
-  /* slate-500 */
-  --sl-color-gray-5: hsl(222.2 47.4% 71.8%);
-  /* slate-400 */
-  --sl-color-gray-6: hsl(222.2 47.4% 90.8%);
-  /* slate-300 - Used for inline code bg, hairlines */
-  --sl-color-gray-7: hsl(222.2 47.4% 90.8%);
-  /* slate-200 - Used for nav bg */
-  --sl-color-black: hsl(222.2 47.4% 96.3%);
-  /* slate-100 - Used for main bg */
-
-  --sl-color-orange-high: hsl(var(--sl-hue-orange), 80%, 25%);
-  --sl-color-orange: hsl(var(--sl-hue-orange), 90%, 60%);
-  --sl-color-orange-low: hsl(var(--sl-hue-orange), 90%, 88%);
-  --sl-color-green-high: hsl(var(--sl-hue-green), 80%, 22%);
-  --sl-color-green: hsl(var(--sl-hue-green), 90%, 46%);
-  --sl-color-green-low: hsl(var(--sl-hue-green), 85%, 90%);
-  --sl-color-blue-high: hsl(var(--sl-hue-blue), 80%, 30%);
-  --sl-color-blue: hsl(var(--sl-hue-blue), 90%, 60%);
-  --sl-color-blue-low: hsl(var(--sl-hue-blue), 88%, 90%);
-  --sl-color-purple-high: hsl(var(--sl-hue-purple), 90%, 30%);
-  --sl-color-purple: hsl(var(--sl-hue-purple), 90%, 60%);
-  --sl-color-purple-low: hsl(var(--sl-hue-purple), 80%, 90%);
-  --sl-color-red-high: hsl(var(--sl-hue-red), 80%, 30%);
-  --sl-color-red: hsl(var(--sl-hue-red), 90%, 60%);
-  --sl-color-red-low: hsl(var(--sl-hue-red), 80%, 90%);
-
-  --sl-color-accent-low: #008078;
-  --sl-color-accent: #008078;
-  --sl-color-accent-high: #008078;
-
-  --sl-color-text-accent: var(--sl-color-accent);
-  --sl-color-text-invert: var(--sl-color-black);
-  --sl-color-bg-nav: var(--sl-color-gray-7);
-  --sl-color-bg-sidebar: var(--sl-color-bg);
-  --sl-color-bg-inline-code: var(--sl-color-gray-6);
-  --sl-color-bg-accent: var(--sl-color-accent);
-  --sl-color-hairline-light: var(--sl-color-gray-6);
-  --sl-color-hairline-shade: var(--sl-color-gray-6);
-
-  --sl-color-backdrop-overlay: hsla(225, 9%, 36%, 0.66);
-
-  /* Shadows (light mode) */
-  --sl-shadow-sm: 0px 1px 1px hsla(0, 0%, 0%, 0.06), 0px 2px 1px hsla(0, 0%, 0%, 0.06);
-  --sl-shadow-md: 0px 8px 4px hsla(0, 0%, 0%, 0.03), 0px 5px 2px hsla(0, 0%, 0%, 0.03),
-    0px 3px 2px hsla(0, 0%, 0%, 0.06), 0px 1px 1px hsla(0, 0%, 0%, 0.06);
-  --sl-shadow-lg: 0px 25px 7px rgba(0, 0, 0, 0.01), 0px 16px 6px hsla(0, 0%, 0%, 0.03),
-    0px 9px 5px hsla(223, 13%, 10%, 0.08), 0px 4px 4px hsla(0, 0%, 0%, 0.16),
-    0px 4px 2px hsla(0, 0%, 0%, 0.04);
-}
-
 @media (min-width: 50em) {
   :root {
     --sl-nav-height: 4rem;
@@ -253,6 +190,11 @@
   color: var(--sl-color-black)
 }
 
-[data-theme='light'] .site-title img {
-  filter: brightness(0.5) contrast(1.5);
+starlight-theme-select {
+  display: none;
+}
+
+.expressive-code {
+  border-radius: 10px;
+  overflow: hidden;
 }

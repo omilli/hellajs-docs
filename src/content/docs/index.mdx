@@ -1,25 +1,66 @@
 ---
-title: HellaJS
-description: A reactive client-side framework for building web interfaces.
+title: HellaJS Overview
+description: Build powerful user interfaces with predictable reactivity and JSX.
 ---
 
-import { Code, Icon } from "@astrojs/starlight/components";
-import CounterExample from "../../components/CounterExample.astro"
-import importedCounter from "../../components/counter?raw";
+import { Aside } from '@astrojs/starlight/components';
 
-<p class="subtitle">A reactive client-side framework for building web interfaces.</p>
 
-<div class="flex gap-4 items-center">
-  <div class="flex gap-2 items-center">
-    <Icon name="github" /> <a href="https://github.com/omilli/hellajs">GitHub</a>
-  </div>
+HellaJS is a collection of simple packages for building fast and lightweight user interfaces. It's designed to be modular, so you can choose the parts you need. The `core` package provides reactivity and additional packages can be used for routing, state management, and more.
+
+``` jsx
+const Counter = () => {
+  const count = signal(0);
+
+  return (
+    <button onClick={() => count(count() + 1)}>{count}</button>
+  );
+};
+
+mount(Counter, "#counter");
+
+```
+
+<div class="mt-6">
+  <Aside type="caution" title="Disclaimer">
+    <p>
+      HellaJS is experimental and not yet ready for production use. The API is subject to change, and there are no guarantees of stability. Use at your own risk!
+    </p>
+  </Aside>
 </div>
 
+## Project Goals
 
-## Quick Start
+- **Quick**: Comparable speed to the most popular frameworks.
+- **Lightweight**: Tiny bundles due to it's modular architechture.
+- **Efficient**: Low memory consumption and fast first paint.
+- **Simple**: Familiar and friendly developer experience.
+- **Tested**: Over 130 tests and +95% test coverage.
+- **Documented**: Clear and concise documentation with examples.
 
-Use whichever [environment](/overview/environments/) suits your needs.
 
-<Code code={importedCounter} lang="js" />
+## Core Concepts
 
-<CounterExample/>
+The development experience with JSX is familiar to anyone coming from React or Solid, but it's less opinionated and requires no compiler if you use `html` proxy elements.
+
+The core concept are reactivity and granular DOM updates.`mount` is a one-time operation and elements only react when their text content or an attribute are a `signal` or derived function.
+
+Instead of a virtual DOM, HellaJS using a lightweight node registry and components are automatically cleaned after they are removed from the DOM.
+
+## Packages
+
+  {['core', 'dom', 'css', 'resource', 'router', 'store'].map(name => (
+    <div class="flex gap-4 items-center" key={name}>
+      <a href={`/packages/${name}/overview`} class="min-w-[65px]">{name}</a>
+      <img class="mt-0 min-w-[95px]" alt="npm version" src={`https://img.shields.io/npm/v/@hellajs/${name}`} />
+      <img class="mt-0" alt="" src={`https://img.shields.io/bundlephobia/minzip/@hellajs/${name}@latest`} />
+    </div>
+  ))}
+
+
+
+## What's Next?
+
+Check out the `Quick Start` guide. You'll learn how to set up your project, create components, and manage state. If you're looking for more advanced topics, the see concept pages, they cover the core ideas behind HellaJS, including reactivity, templating and more.
+
+Take a look at the krautest benchmark results to see how HellaJS compares to other frameworks. Or take a at the `Todo turtorial` or `Real World App`.

@@ -1,0 +1,55 @@
+---
+title: Templates
+description: Familiar JSX templating with function-based reactivity.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+
+HellaJS has it's own flavor of JSX templating, which is similar to React and Solid. It uses a function-based approach to create reactive components.
+
+There's also a `html` proxy element that allows you to use HellaJS without a compiler, which is useful when you want to avoid the overhead of a build step.
+
+<Aside type="note" title="Note">
+  <p>
+    We'll use the JSX syntax in this guide, but you can use the `html` proxy element.
+  </p>
+</Aside>
+
+
+<Tabs>
+  <TabItem label="JSX">
+    ```jsx
+    const Counter = () => {
+      const count = signal(0);
+
+      return (
+        <button onClick={() => count(count() + 1)}>{count}</button>
+      );
+    };
+
+    mount(Counter, "#counter");
+    ```
+  </TabItem>
+  <TabItem label="Proxy">
+    ```js
+    const Counter = () => {
+      const count = signal(0);
+
+      return html.button({ onclick: () => count(count() + 1) },
+        count
+      );
+    };
+
+    mount(Counter, '#counter');
+    ```
+  </TabItem>
+</Tabs>
+
+## Props
+
+## Conditionals
+
+## Loops
+
+## Dynamic

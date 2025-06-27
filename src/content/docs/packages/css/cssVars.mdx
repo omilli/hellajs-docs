@@ -1,0 +1,178 @@
+---
+title: cssVars
+description: Define and inject CSS rules and variables from JS objects.
+---
+
+<p class="subtitle">Define and inject CSS rules and variables from JS objects.</p>
+
+```typescript
+/**
+ * Define and inject CSS rules from JS objects.
+ * @param obj CSS rules as an object.
+ * @param options Optional:
+ * - name: Use a custom class name instead of a generated one.
+ * - scoped: Scope the class to a parent selector (string).
+ * - global: Inject global styles (no class name returned).
+ * @returns The generated class name (unless global)
+ */
+export function css(obj: CSSObject, options?: CSSOptions): string
+
+/**
+ * Inject CSS custom properties (variables) globally.
+ * @param vars Object of variables (can be nested)
+ * @returns Object mapping keys to var(--key) references
+ */
+export function cssVars(vars: Record<string, any>): Record<string, string>
+```
+
+## Usage
+
+Use `css` to generate styles. Supports nesting, pseudo-selectors, and media queries.
+
+```typescript
+import { css, cssVars } from '@hellajs/dom/css';
+
+const className = css({
+  color: 'red',
+  ':hover': {
+    color: 'blue'
+  },
+  $span: {
+    color: 'green'
+  },
+  '@media (max-width: 600px)': {
+    color: 'purple'
+  }
+});
+
+cssVars({
+  primary: '#0070f3',
+  borderRadius: '8px',
+  theme: {
+    accent: 'hotpink',
+    spacing: 4
+  }
+});
+```
+
+This injects:
+
+```css
+.c1 {
+  color: red;
+}
+.c1:hover {
+  color: blue;
+}
+.c1 span {
+  color: green;
+}
+@media (max-width: 600px) {
+  .c1 {
+    color: purple;
+  }
+}
+:root {
+  --primary: #0070f3;
+  --borderRadius: 8px;
+  --theme-accent: hotpink;
+  --theme-spacing: 4;
+}
+```
+
+Use <code>$tag</code> keys to target HTML elements as descendants of your generated class:
+
+```typescript
+const className = css({
+  color: 'red',
+  $span: {
+    color: 'green'
+  },
+  $div: {
+    background: 'yellow'
+  }
+});
+```
+
+This injects:
+
+```css
+.c1 {
+  color: red;
+}
+.c1 span {
+  color: green;
+}
+.c1 div {
+  background: yellow;
+}
+```
+
+
+Use <code>&</code> in keys to reference the current class for more complex selectors:
+
+```typescript
+const className = css({
+  color: 'red',
+  '&.foo, &.bar': {
+    color: 'purple'
+  },
+});
+```
+
+This injects:
+
+```css
+.c1 {
+  color: red;
+}
+.c1.foo {
+  color: purple;
+}
+.c1.bar {
+  color: purple;
+}
+```
+
+## Return Values
+
+`css` returns the generated class name (unless `global` is set, in which case it returns an empty string):
+
+```typescript
+const className = css({
+  color: 'red'
+});
+console.log(className); // e.g. 'c1'
+
+const globalResult = css({
+  $body: {
+    margin: 0
+  }
+}, {
+  global: true
+});
+console.log(globalResult); // ''
+```
+
+`cssVars` returns an object mapping each key to its `var(--key)` reference:
+
+```typescript
+const vars = cssVars({ foo: 'red' });
+console.log(vars.foo); // 'var(--foo)'
+```
+
+## Remove styles
+
+Remove styles for a given object:
+
+```typescript
+css.remove(obj);
+```
+
+## Reset
+
+```typescript
+import { cssReset, cssVarsReset } from '@hellajs/dom/css';
+cssReset();
+cssVarsReset();
+```
