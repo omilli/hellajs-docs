@@ -1,45 +1,22 @@
 ---
 title: html
-description: Provides a simple way to create DOM elements.
+description: Create DOM elements using a simple proxy object and functions.
 ---
 
-<p >Create DOM elements using tag functions.</p>
-
-```typescript
-/**
- * Factory for DOM elements.
- * @example html.div({ class: "foo" }, "bar")
- */
-export const html: {
-  [K in keyof HTMLElementTagNameMap]: (
-    props?: VNodeProps,
-    ...children: VNodeValue[]
-  ) => VNode;
-} & {
-  $: (
-    props?: VNodeProps,
-    ...children: VNodeValue[]
-  ) => VNode;
-};
-```
-
-## Usage
-
-Use <code>html</code> to create elements, set attributes, and nest children. Supports fragments and arrays.
+Create DOM elements using a simple proxy object and functions.
 
 ```typescript
 import { html } from '@hellajs/dom';
 
-const { div, input, button } = html;
 
-const form = div(
-  input({ 
+const form = html.div(
+  html.input({ 
     type: 'text',
     placeholder: 'Enter your name',
     className: 'input-field',
     required: true
   }),
-  button({ 
+  html.button({ 
     type: 'submit',
     className: 'btn primary',
     onclick: (e) => {

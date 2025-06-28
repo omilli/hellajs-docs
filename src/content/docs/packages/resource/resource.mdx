@@ -3,38 +3,7 @@ title: resource
 description: Reactive async data fetching with caching, abort, and mutation.
 ---
 
-<p >Reactive async data fetching with caching and mutation.</p>
-
-```typescript
-/**
- * Create a reactive resource for async data fetching.
- * @param fetcher Async function to fetch data, receives key as argument.
- * @param options Options for key, initialData, cacheTime, onSuccess, onError, etc.
- * @returns Resource object with loading, error, data, refetch, reset, mutate, abort, etc.
- */
-resource<T, K>(
-  fetcher: (key: K) => Promise<T>,
-  options?: {
-    key?: () => K,
-    initialData?: T,
-    cacheTime?: number,
-    onSuccess?: (data: T) => void,
-    onError?: (err: any) => void
-  }
-): {
-  loading: () => boolean,
-  error: () => any,
-  data: () => T | undefined,
-  refetch: () => void,
-  reset: () => void,
-  mutate: (updater: () => Promise<T>) => Promise<void>,
-  invalidate: () => void
-}
-```
-
-## Usage
-
-Create a reactive resource for async data. The resource tracks loading, error, and data states, and can be refetched, reset, mutated, or invalidated. Useful for fetching data that depends on reactive keys and integrates with <a href="/api/reactive/signal">signal</a> and <a href="/api/reactive/effect">effect</a>.
+Reactive async data fetching with caching and mutation.
 
 ```typescript
 import { signal, effect } from "@hellajs/core";
@@ -47,9 +16,9 @@ const userId = signal("1");
 const userResource = resource(
   (id: string) => fetch(`/api/user/${id}`).then(r => r.json()),
   {
-    key: () => userId(),
-    initialData: null,
-    cacheTime: 60000, // 1 minute cache
+    key: userId, // Reactive key, updates on change
+    initialData: null, // Initial data before fetch
+    cacheTime: 60000, // Cache for 1 minute
     onSuccess: (data) => console.log("Loaded", data),
     onError: (err) => console.error("Error", err)
   }
@@ -61,18 +30,17 @@ effect(() => {
   if (userResource.data()) console.log("User:", userResource.data());
 });
 
-// Refetch, reset, mutate, invalidate
+// Refetch
 userResource.refetch();
+
+// Abort previous fetch if still loading
 userResource.reset();
+
+// Optimistic update
 userResource.mutate(async () => {
-  // Optimistic update
   return { id: userId(), name: "New Name" };
 });
+
+// Invalidate cache to refetch next time
 userResource.invalidate();
 ```
-
-<p>
-See also: 
-<a href="/api/reactive/signal">signal</a>, 
-<a href="/api/reactive/effect">effect</a>
-</p>

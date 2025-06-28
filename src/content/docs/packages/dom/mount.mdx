@@ -1,44 +1,20 @@
 ---
 title: mount
-description: Renders a DOM tree to the real DOM.
+description: Renders components to the DOM.
 ---
-
-<p >Render a DOM tree into a real DOM element.</p>
-
-```typescript
-/**
- * Render a DOM node to the DOM.
- * @param vNode Node or function returning one.
- * @param rootSelector CSS selector for the root element, defaults to #app.
- */
-mount(vNode: VNode | (() => VNode), rootSelector?: string): void
-```
-
-## Usage
-
-Mount a DOM tree to a real DOM node. Use with <a href="/api/reactive/signal">signal</a> for reactivity.
 
 ``` jsx
 import { signal } from '@hellajs/core';
-import { mount, html } from '@hellajs/dom';
+import { mount } from '@hellajs/dom';
 
-const { div, h1, button } = html;
-
-const count = signal(0);
-
-const increment = () => {
-  count(count() + 1);
-};
-
-const App = () => {
+const Counter = () => {
+  const count = signal(0);
+  
   return (
-    <div>
-      <h1>Count: {count()}</h1>
-      <button onClick={increment}>Increment</button>
-    </div>
+    <button onClick={increment}>{count}</button>
   );
 };
 
 // Mount the App
-mount(App, '#root');
+mount(Counter, '#counter');
 ```

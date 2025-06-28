@@ -3,107 +3,48 @@ title: forEach
 description: Loops through an array and renders a template for each item.
 ---
 
-<p >Render a template for each item in an array.</p>
+Loops through an array and renders a template for each item.
 
-```typescript
-/**
- * Render a template for each item in an array.
- * @param array Array or function returning array.
- * @param arg2 Template function or key string.
- * @param arg3 Template function if arg2 is a key.
- * @returns Function to mount the list.
- */
-type ForEach<T> = (item: T, index: number) => VNodeValue;
-
-export function forEach<T>(
-  each: T[] | (() => T[]),
-  arg2: ForEach<T> | keyof T,
-  arg3?: ForEach<T>
-)
-```
-
-## Usage
-
-Render lists declaratively. Supports reactive arrays via <a href="/api/reactive/signal">signal</a>. You can provide a template function, and optionally a key for efficient DOM updates.
-
-### Basic Usage
-
-```typescript
+``` jsx
 import { signal } from '@hellajs/core';
-import { html, forEach } from '@hellajs/dom';
-
-const { ul, li } = html;
+import { forEach } from '@hellajs/dom';
 
 const items = signal([1, 2, 3]);
-
-const List = ul(
-  forEach(items, (item) =>
-    li(`Item ${item}`)
-  )
-);
+//...
+<ul>
+  {forEach(users, (user) =>
+    <li key={user.index}>User {user.name}</li>
+  )}
+</ul>
 ```
 
-### Static Array
-
-```typescript
-const StaticList = ul(
-  forEach([10, 20, 30], (item, i) =>
-    li(`Static ${item}`)
-  )
-);
-```
-
-### Keys
+## Keys
 
 Keys are used for efficient DOM updates. You can set keys in several ways:
 
-#### Property Name
-
-Pass a string as the second argument to use a property as the key.
-
-```typescript
-const users = signal([
-  { index: 1, name: 'Alice' },
-  { index: 2, name: 'Bob' }
-]);
-
-const UserList = ul(
-  forEach(users, 'index', (user) =>
-    li(user.name)
-  )
-);
-```
-
-#### "id" Fallback
-
-If you do not provide a key, but your items have an <code>id</code> property, <code>forEach</code> will use <code>item.id</code> as the key automatically.
-
-```typescript
-const users = signal([
-  { id: 1, name: 'Alice' },
-  { id: 2, name: 'Bob' }
-]);
-
-const UserList = ul(
-  forEach(users, (user) =>
-    li(user.name)
-  )
-);
-```
-
-#### Manual
-
-You can also set the key directly on the element.
-
 ``` jsx
 const users = signal([
-  { index: 1, name: 'Alice' },
-  { index: 2, name: 'Bob' }
+  { id: 1, track: 0, name: 'Alice' },
+  { id: 2, track: 1, name: 'Bob' }
 ]);
 
+// Track by the "track" property
+// use the key prop
 <ul>
-  {forEach(users, (item) =>
-    <li>({ key: item.index }, `Item ${item.name}`)</li>
+  {forEach(users, (user) =>
+    <li key={user.track}>User {user.name}</li>
   )}
-</ul>;
+
+  {/*or the 2nd argument*/}
+
+  {forEach(users, "track", (user) =>
+    <li>User {user.name}</li>
+  )}
+
+  {/*auto fallback to id key*/}
+
+  {forEach(users, (user) =>
+    <li>User {user.name}</li>
+  )}
+</ul>
 ```
