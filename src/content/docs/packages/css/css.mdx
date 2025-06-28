@@ -1,36 +1,14 @@
 ---
 title: css
-description: Define and inject CSS rules and variables from JS objects.
+description: Define and inject CSS rules from JS objects.
 ---
 
-<p >Define and inject CSS rules and variables from JS objects.</p>
-
-```typescript
-/**
- * Define and inject CSS rules from JS objects.
- * @param obj CSS rules as an object.
- * @param options Optional:
- * - name: Use a custom class name instead of a generated one.
- * - scoped: Scope the class to a parent selector (string).
- * - global: Inject global styles (no class name returned).
- * @returns The generated class name (unless global)
- */
-export function css(obj: CSSObject, options?: CSSOptions): string
-
-/**
- * Inject CSS custom properties (variables) globally.
- * @param vars Object of variables (can be nested)
- * @returns Object mapping keys to var(--key) references
- */
-export function cssVars(vars: Record<string, any>): Record<string, string>
-```
-
-## Usage
+Define and inject CSS rules from JS objects.
 
 Use `css` to generate styles. Supports nesting, pseudo-selectors, and media queries.
 
 ```typescript
-import { css, cssVars } from '@hellajs/dom/css';
+import { css } from '@hellajs/dom/css';
 
 const className = css({
   color: 'red',
@@ -43,17 +21,26 @@ const className = css({
   '@media (max-width: 600px)': {
     color: 'purple'
   }
+}, {
+  name: 'my-class', // optional custom class name
+  global: true // injects styles globally, no class name generate
+  scoped: ".my-scope" // injects styles scoped to a specific element
 });
 
-cssVars({
-  primary: '#0070f3',
-  borderRadius: '8px',
-  theme: {
-    accent: 'hotpink',
-    spacing: 4
+const className = css({
+  color: 'red',
+  ':hover': {
+    color: 'blue'
+  },
+  $span: {
+    color: 'green'
+  },
+  '@media (max-width: 600px)': {
+    color: 'purple'
   }
+}, {
+  global: true // injects styles globally, no class name generate
 });
-```
 
 This injects:
 
@@ -72,15 +59,11 @@ This injects:
     color: purple;
   }
 }
-:root {
-  --primary: #0070f3;
-  --borderRadius: 8px;
-  --theme-accent: hotpink;
-  --theme-spacing: 4;
-}
 ```
 
-Use <code>$tag</code> keys to target HTML elements as descendants of your generated class:
+## Element Children
+
+Use the `$tag` pattern to target HTML elements as descendants of your generated class:
 
 ```typescript
 const className = css({
@@ -109,7 +92,7 @@ This injects:
 ```
 
 
-Use <code>&</code> in keys to reference the current class for more complex selectors:
+Use `&` in keys to reference the current class for more complex selectors:
 
 ```typescript
 const className = css({
@@ -133,46 +116,30 @@ This injects:
   color: purple;
 }
 ```
+## Return Value
 
-## Return Values
-
-`css` returns the generated class name (unless `global` is set, in which case it returns an empty string):
+Returns the generated class name (unless `global` option is set):
 
 ```typescript
 const className = css({
   color: 'red'
 });
 console.log(className); // e.g. 'c1'
+``` 
 
-const globalResult = css({
-  $body: {
-    margin: 0
-  }
-}, {
-  global: true
+## Remove Styles
+
+```typescript
+const obj = css({
+  color: 'red'
 });
-console.log(globalResult); // ''
-```
-
-`cssVars` returns an object mapping each key to its `var(--key)` reference:
-
-```typescript
-const vars = cssVars({ foo: 'red' });
-console.log(vars.foo); // 'var(--foo)'
-```
-
-## Remove styles
-
-Remove styles for a given object:
-
-```typescript
 css.remove(obj);
 ```
 
 ## Reset
 
+Reset Styles:
+
 ```typescript
-import { cssReset, cssVarsReset } from '@hellajs/dom/css';
 cssReset();
-cssVarsReset();
 ```
