@@ -3,28 +3,7 @@ title: navigate
 description: Programmatically navigate to a route with dynamic params and query objects.
 ---
 
-<p >Programmatically navigate to a route.</p>
-
-```typescript
-/**
- * Programmatically navigate to a route.
- * 
- * @param path The route pattern or path (e.g. "/user/:id").
- * @param params (optional) Object of dynamic params to fill in the path.
- * @param query (optional) Object of query parameters.
- * @param opts (optional) { replace?: boolean } to replace instead of push history.
- */
-navigate(
-  path: string,
-  params?: Record<string, string>,
-  query?: Record<string, string>,
-  opts?: { replace?: boolean }
-)
-```
-
-### Usage
-
-Supports dynamic params and query objects.
+Programmatically navigate to a route with dynamic params and query objects.
 
 ```typescript
 import { navigate } from "@hellajs/router";
@@ -33,7 +12,11 @@ import { navigate } from "@hellajs/router";
 navigate("/about");
 
 // Go to /user/123?tab=profile
-navigate("/user/:id", { id: "123" }, { tab: "profile" });
+navigate(
+  "/user", // Path 
+  { id: "123" }, // Params
+  { tab: "profile"} // Query
+);
 
 // Replace current history entry
 navigate("/login", {}, {}, { replace: true });

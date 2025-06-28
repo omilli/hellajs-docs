@@ -3,20 +3,7 @@ title: store
 description: A deeply reactive store for managing application state.
 ---
 
-<p >A deeply reactive object for managing state.</p>
-
-```typescript
-/**
- * Create a deeply reactive store.
- * @param initial Initial object value for the store.
- * @returns Store object with reactive properties and methods.
- */
-store<T extends object = {}>(initial: T): Store<T>
-```
-
-## Usage
-
-Create a deeply reactive object with nested <a href="/api/reactive/signal">signal</a>-like properties. Each property is a signal, and you can update, set, or read the entire store or any nested value. Use <code>computed()</code> to get a plain snapshot.
+A deeply reactive store for managing application state.
 
 ```typescript
 import { store } from '@hellajs/store';
@@ -42,11 +29,10 @@ userStore.update({
     city: 'San Francisco',
   },
 });
-console.log(userStore.address.city());
-// 'San Francisco'
+console.log(userStore.address.city()); // 'San Francisco'
 
-// Set property directly
-userStore.address.street('789 Oak St');
-console.log(userStore.address.street());
-// '789 Oak St'
+
+
+userStore.address.street('789 Oak St'); // Set property directly
+console.log(userStore.address.street()); // '789 Oak St'
 ```

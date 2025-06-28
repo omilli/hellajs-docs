@@ -1,27 +1,9 @@
 ---
 title: route
-description: Reactive signal containing current route info.
+description: A reactive signal containing the current route information.
 ---
 
-<p >A reactive signal containing the current route information.</p>
-
-```typescript
-/**
- * The current route info as a reactive signal.
- * 
- * {
- *   handler: Function | null,
- *   params: Record<string, string>,
- *   query: Record<string, string>,
- *   path: string
- * }
- */
-route()
-```
-
-## Usage
-
- Use it to reactively access the current path, params, query, and handler.
+A reactive signal containing the current route information.
 
 ```typescript
 import { route, effect } from "@hellajs/router";
