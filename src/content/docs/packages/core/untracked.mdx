@@ -1,22 +1,9 @@
 ---
 title: untracked
-description: Prevents tracking signal dependencies within a function call.
+description: Read signals inside effects without creating a dependency.
 ---
 
-<p >Read <a href="/api/reactive/signal">signals</a> without tracking dependencies.</p>
-
-```typescript
-/**
- * Execute a function without tracking signal dependencies.
- * @param callback Function to execute untracked.
- * @returns The result of the function.
- */
-untracked<T>(callback: () => T): T
-```
-
-## Usage
-
-Use <code>untracked</code> to read a <a href="/api/reactive/signal">signal</a> inside an <a href="/api/reactive/effect">effect</a> or <a href="/api/reactive/computed">computed</a> without creating a dependency. This prevents the parent effect or computed from re-running when the signal changes.
+Read <a href="/api/reactive/signal">signals</a> inside effects without craeting a dependency.
 
 ```typescript
 import { signal, effect, untracked } from '@hellajs/core';

@@ -3,90 +3,13 @@ title: signal
 description: A reactive function that holds a value and notifies subscribers when it changes.
 ---
 
-<p >Holds a value and notifies subscribers when it changes. </p>
-
-```typescript
-interface Signal<T> {
-  // Get or set the value
-  (value?: T): T;
-  // Set the value
-  set: (value: T) => void;
-  // Subscribe to changes
-  subscribe: (fn: () => void) => () => void
-  // Unsubscribe from changes
-  unsubscribe: (fn: () => void) => void
-  // Cleanup all subscribers
-  cleanup: () => void;
-}
-
-/**
- * @param initialValue The initial value for the signal
- * @returns A signal function with methods
- */
-signal<T>(initialValue: T): Signal<T>
-```
-
-## Usage
-
-### Get
-
-Get a signal by calling it with no arguments.
+Holds a value and notifies subscribers when it changes.
 
 ```typescript
 import { signal } from '@hellajs/core';
 
-// Create a signal with an initial value
-const count = signal(5);
+const count = signal(0);
 
-// Read the current value
-console.log(count()); // 5
-```
-
-### Set
-Update a signal value using the set method, or by calling it with a new value.
-
-```typescript
-// Update using set method
-count(10);
-console.log(count()); // 10
-
-// Update using function call
-count(20);
-console.log(count()); // 10
-```
-
-### Subscribe
-
-Subscribe to signals (or use <a href="/api/reactive/effect">effect</a>) to get notified when the value changes.
-
-```typescript
-
-// Subscribe to changes
-const unsubscribe = count.subscribe(() => {
-  console.log('Count changed:', count());
-});
-
-// Stop listening for changes
-unsubscribe(); 
-```
-
-or similar to an eventListener:
-
-```typescript
-const subscribeFn = () => {
-  console.log('Count changed:', count());
-}
-
-// Subscribe to changes
-count.subscribe(subscribeFn);
-
-// Stop listening for changes
-count.unsubscribe(subscribeFn); 
-```
-
-### Cleanup
-Call cleanup when the signal is no longer needed. It will remove all subscribers and stop notifying them. Cleanup is required for global signals only. Signals created inside a component function are automatically cleaned when the component is unmounted.
-
-```typescript
-count.cleanup();
+count(1);
+console.log(count()); // 1
 ```

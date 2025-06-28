@@ -1,22 +1,9 @@
 ---
 title: batch
-description: Prevents multiple effects by grouping multiple signal updates.
+description: Groups multiple signal updates so an effect runs only once after all updates.
 ---
 
-<p >Group multiple <a href="/api/reactive/signal">signal</a> updates to prevent redundant <a href="/api/reactive/effect">effects</a>.</p>
-
-```typescript
-/**
- * Group multiple signal updates into a single effect flush.
- * @param callback Function containing batched signal updates.
- * @returns The result of the callback.
- */
-batch<T>(callback: () => T): T
-```
-
-## Usage
-
-Batch groups multiple <a href="/api/reactive/signal">signal</a> updates together so that <a href="/api/reactive/effect">effects</a> only run once after all updates. Use this to avoid unnecessary recomputation when updating several signals at once.
+Groups multiple <a href="/api/reactive/signal">signal</a> updates so an <a href="/api/reactive/effect">effect</a> runs only once after all updates.
 
 ```typescript
 import { signal, batch } from '@hellajs/core';
