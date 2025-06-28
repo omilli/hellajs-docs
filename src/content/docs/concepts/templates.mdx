@@ -24,7 +24,7 @@ const Counter = () => {
   const count = signal(0);
 
   return (
-    <button onClick={() => count(count() + 1)}>{count}</button>
+    <button onclick={() => count(count() + 1)}>{count}</button>
   );
 };
 
@@ -66,7 +66,7 @@ const Counter = (props, children) => {
     <div class={countClass}>
       <p>Count: {count}</p>
       <p>Double Count: {doubleCount}</p>
-      <button onClick={() => count(count() + 1)}>{count}</button>
+      <button onclick={() => count(count() + 1)}>{count}</button>
       {children}
     </div>
   );
