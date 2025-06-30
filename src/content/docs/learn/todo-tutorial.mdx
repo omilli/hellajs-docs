@@ -54,6 +54,7 @@ For dynamic attributes and text, use curly braces and functions, but don't call 
 // ...continued...
 
 return (
+  {/* ⚠️ Attach functions for reactivity, don't call them */}
   <div>
     <p>Todo List ({todoCount})</p>
     <div>
@@ -121,6 +122,7 @@ function Todo() {
   };
 
   return (
+    {/* ⚠️ Attach functions for reactivity, don't call them */}
     <div>
       <p>Todo List ({todoCount})</p>
       <div>

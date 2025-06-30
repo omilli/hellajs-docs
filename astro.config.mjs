@@ -44,14 +44,7 @@ export default defineConfig({
 						{ label: 'store', autogenerate: { directory: 'packages/store' } },
 					]
 				},
-				// {
-				// 	label: 'Plugins',
-				// 	items: [
-				// 		{ label: 'Babel', link: '/plugins/babel' },
-				// 		{ label: 'Rollup', link: '/plugins/rollup' },
-				// 		{ label: 'Vite', link: '/plugins/vite' },
-				// 	]
-				// },
+				{ label: 'Plugins', link: '/plugins' },
 			]
 		}),
 	],
