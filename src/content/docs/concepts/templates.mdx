@@ -52,6 +52,15 @@ Components are functions that return a JSX element or an [html](/packages/dom/ht
 
 There's no virtual DOM, and [mount](/packages/dom/mount) is a one-time operation. Components have their own reactive scope and are auto-cleaned when removed.
 
+<Aside type="danger" title="Reactive Bindings">
+  <p>
+  `<p>{content()}</p>` Will render only once.
+  
+  Pass the reference instead `<p>{content}</p>`.
+  </p>
+</Aside>
+
+
 
 ``` jsx
 const Counter = (props, children) => {
@@ -62,7 +71,7 @@ const Counter = (props, children) => {
   const countClass = () => count() % 2 === 0 ? 'even' : 'odd';
 
   return (
-    {/* Attach functions for reactivity, don't call them */}
+    {/* ⚠️ Attach functions for reactivity, don't call them */}
     <div class={countClass}>
       <p>Count: {count}</p>
       <p>Double Count: {doubleCount}</p>
