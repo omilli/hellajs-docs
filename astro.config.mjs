@@ -22,7 +22,8 @@ export default defineConfig({
 						{ label: 'Reactivity', link: '/concepts/reactivity' },
 						{ label: 'Templates', link: '/concepts/templates' },
 						{ label: 'Styling', link: '/concepts/styling' },
-						{ label: 'Context', link: '/concepts/context' }
+						{ label: 'Context', link: '/concepts/context' },
+						{ label: 'Routing', link: '/concepts/routing' }
 					]
 				},
 				{
