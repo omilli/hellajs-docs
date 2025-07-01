@@ -30,8 +30,11 @@ effect(() => {
   if (userResource.data()) console.log("User:", userResource.data());
 });
 
-// Refetch
-userResource.refetch();
+// Fetch data (uses cache if available)
+userResource.fetch();
+
+// Force a new request (bypasses cache)
+userResource.request();
 
 // Abort previous fetch if still loading
 userResource.reset();
