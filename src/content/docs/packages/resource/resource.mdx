@@ -13,8 +13,9 @@ import { resource } from "@hellajs/resource";
 const userId = signal("1");
 
 // Create a resource for user data
-const userResource = resource(
-  (id: string) => fetch(`/api/user/${id}`).then(r => r.json()),
+const userResource = resource((id: string) =>
+    fetch(`/api/user/${id}`).then(r => r.json()
+  ),
   {
     key: userId, // Reactive key, updates on change
     initialData: null, // Initial data before fetch
@@ -37,12 +38,7 @@ userResource.fetch();
 userResource.request();
 
 // Abort previous fetch if still loading
-userResource.reset();
-
-// Optimistic update
-userResource.mutate(async () => {
-  return { id: userId(), name: "New Name" };
-});
+userResource.abort();
 
 // Invalidate cache to refetch next time
 userResource.invalidate();
