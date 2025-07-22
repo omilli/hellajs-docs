@@ -61,9 +61,9 @@
   --sl-color-red: hsl(var(--sl-hue-red), 82%, 63%);
   --sl-color-red-high: hsl(var(--sl-hue-red), 82%, 87%);
 
-  --sl-color-accent-low: #00FFF6;
-  --sl-color-accent: #00FFF6;
-  --sl-color-accent-high: #00FFF6;
+  --sl-color-accent-low: #38EBFF;
+  --sl-color-accent: #38EBFF;
+  --sl-color-accent-high: #38EBFF;
 
   --sl-color-text: var(--sl-color-gray-2);
   --sl-color-text-accent: var(--sl-color-accent-high);
