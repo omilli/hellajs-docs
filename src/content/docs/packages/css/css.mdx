@@ -27,21 +27,6 @@ const className = css({
   scoped: ".my-scope" // injects styles scoped to a specific element
 });
 
-const className = css({
-  color: 'red',
-  ':hover': {
-    color: 'blue'
-  },
-  $span: {
-    color: 'green'
-  },
-  '@media (max-width: 600px)': {
-    color: 'purple'
-  }
-}, {
-  global: true // injects styles globally, no class name generate
-});
-
 This injects:
 
 ```css
