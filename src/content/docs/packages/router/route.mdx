@@ -6,7 +6,8 @@ description: A reactive signal containing the current route information.
 A reactive signal containing the current route information.
 
 ```typescript
-import { route, effect } from "@hellajs/router";
+import { effect } from "@hellajs/core";
+import { route } from "@hellajs/router";
 
 effect(() => {
   const r = route();
