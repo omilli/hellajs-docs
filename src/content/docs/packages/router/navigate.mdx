@@ -1,0 +1,84 @@
+---
+title: navigate
+description: Programmatically navigate to a route with dynamic params and query objects.
+---
+
+Programmatically navigate to a route with dynamic params and query objects.
+
+```typescript
+import { navigate } from "@hellajs/router";
+
+// Go to /about
+navigate("/about");
+
+// Go to /user/123?tab=profile
+navigate(
+  "/user", // Path 
+  { id: "123" }, // Params
+  { tab: "profile"} // Query
+);
+
+// Replace current history entry
+navigate("/login", {}, {}, { replace: true });
+```
+
+## API
+
+```typescript
+function navigate(
+  path: string,
+  params?: Record<string, string>,
+  query?: Record<string, string>,
+  options?: { replace?: boolean }
+): void
+```
+
+## Navigation Options
+
+Control how navigation affects browser history and URL structure.
+
+### Replace vs Push
+
+By default, navigate() adds a new entry to browser history. Use `replace: true` to replace the current entry instead.
+
+```typescript
+// Adds to history (default)
+navigate("/dashboard");
+
+// Replaces current history entry
+navigate("/login", {}, {}, { replace: true });
+```
+
+## Common Patterns
+
+Typical navigation scenarios in applications.
+
+```typescript
+// Form submission redirect
+const handleFormSubmit = async (formData) => {
+  try {
+    const result = await submitForm(formData);
+    navigate("/success", { id: result.id });
+  } catch (error) {
+    navigate("/error", {}, { message: error.message });
+  }
+};
+
+// Conditional navigation
+const handleAction = () => {
+  if (isAuthenticated()) {
+    navigate("/dashboard");
+  } else {
+    navigate("/login", {}, { redirect: route().path });
+  }
+};
+
+// Back navigation with fallback
+const goBack = () => {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    navigate("/"); // Fallback to home
+  }
+};
+```

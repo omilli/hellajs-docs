@@ -1,0 +1,76 @@
+---
+title: Quick Start
+description: Build a simple Todo app with HellaJS using a few core concepts.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Setup
+
+Create a new Vite project and add HellaJS:
+
+```bash
+npm create vite@latest my-hella-app -- --template vanilla
+cd my-hella-app
+npm install
+```
+
+Install HellaJS packages and the Vite plugin:
+
+```bash
+npm install @hellajs/core @hellajs/dom
+npm install --save-dev vite-plugin-hellajs
+```
+
+Configure Vite by creating or updating `vite.config.js`:
+
+```js
+import { defineConfig } from 'vite';
+import viteHellaJS from 'vite-plugin-hellajs';
+
+export default defineConfig({
+  plugins: [viteHellaJS()]
+});
+```
+
+<Aside type="tip">
+  For TypeScript projects, use `--template vanilla-ts` and ensure your `tsconfig.json` includes:
+  ```json
+  "compilerOptions": {
+    // other options...
+    "jsx": "preserve",
+    "types": ["@hellajs/dom"]
+  }
+  ```
+</Aside>
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Replace the contents of `main.js` with:
+
+
+```jsx
+import { signal } from "@hellajs/core";
+import { mount } from "@hellajs/dom";
+
+const App = () => {
+  const count = signal(0);
+
+  return (
+    {/* ⚠️ Attach functions for reactivity, don't call them */}
+    <button onclick={() => count(count() + 1)}>{count}</button>
+  );
+};
+
+mount(App, "#app");
+```
+
+You can now run your project and see the button that increments the count when clicked.
+
+That's all there is to it!
+
+

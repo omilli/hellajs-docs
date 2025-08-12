@@ -1,0 +1,118 @@
+---
+title: css
+description: Define and inject CSS rules from JS objects.
+---
+
+Define and inject CSS rules from JS objects.
+
+```jsx
+import { css } from '@hellajs/css';
+
+const className = css({
+  color: 'red',
+  ':hover': {
+    color: 'blue'
+  },
+  $span: {
+    color: 'green'
+  },
+  '@media (max-width: 600px)': {
+    color: 'purple'
+  }
+});
+```
+
+## API
+
+```typescript
+function css(styles: CSSObject, options?: CSSOptions): string
+
+interface CSSObject {
+  [key: string]: string | number | CSSObject;
+}
+
+interface CSSOptions {
+  name?: string;        // Custom class name
+  global?: boolean;     // Global styles (no class generation)
+  scoped?: string;      // Scope styles to selector
+}
+
+// Static methods
+css.remove(className: string): void
+css.reset(): void
+```
+
+## Nesting & Selectors
+
+Use nested syntax for pseudo-selectors, child elements, and media queries within your styles.
+
+```jsx
+const className = css({
+  color: 'red',
+  // Pseudo-selectors
+  ':hover': {
+    color: 'blue'
+  },
+  // Child elements
+  $span: {
+    color: 'green'
+  },
+  // Parent reference
+  '&.active': {
+    fontWeight: 'bold'
+  },
+  // Media queries
+  '@media (max-width: 600px)': {
+    fontSize: '14px'
+  }
+});
+```
+
+## Global Styles
+
+Apply styles globally without generating class names using the global option.
+
+```jsx
+css({
+  body: {
+    margin: 0,
+    fontFamily: 'Arial, sans-serif'
+  }
+}, { global: true });
+```
+
+## Dynamic Styles
+
+Use signals to create reactive styles.
+
+```jsx
+const theme = signal('light');
+const primaryColor = signal('#007bff');
+
+const dynamicStyles = computed(() => css({
+  backgroundColor: theme() === 'dark' ? '#333' : '#fff',
+  color: theme() === 'dark' ? '#fff' : '#333',
+  borderColor: primaryColor()
+}));
+
+// Use in component
+<div className={dynamicStyles()}>Dynamic content</div>
+```
+
+## Performance Tips
+
+Cache styles and avoid recreating them unnecessarily.
+
+```jsx
+// ❌ Bad: Recreates styles on every render
+const BadComponent = ({ color }) => (
+  <div className={css({ color })}>Content</div>
+);
+
+// ✅ Good: Cache styles outside component or use computed
+const goodStyles = css({ padding: '1rem' });
+const GoodComponent = ({ color }) => {
+  const colorStyle = useMemo(() => css({ color }), [color]);
+  return <div className={`${goodStyles} ${colorStyle}`}>Content</div>;
+};
+```

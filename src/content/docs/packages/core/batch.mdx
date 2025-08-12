@@ -1,0 +1,139 @@
+---
+title: batch
+description: Groups multiple signal updates so an effect runs only once after all updates.
+---
+
+Groups multiple <a href="/api/reactive/signal">signal</a> updates so an <a href="/api/reactive/effect">effect</a> runs only once after all updates.
+
+```typescript
+import { signal, batch } from '@hellajs/core';
+
+// Create signals for form state
+const username = signal('');
+const email = signal('');
+const isSubmitting = signal(false);
+const isSuccess = signal(false);
+
+function submitForm() {
+  batch(() => {
+    isSubmitting(true);
+
+    // Simulate async form submission
+    setTimeout(() => {
+      batch(() => {
+        isSubmitting(false);
+        isSuccess(true);
+        username('');
+        email('');
+      });
+    }, 1000);
+  });
+}
+```
+
+## API
+
+```typescript
+function batch<T>(fn: () => T): T
+```
+
+## Performance Benefits
+
+Batching prevents unnecessary effect runs by deferring all updates until the batch completes.
+
+Without batching, each signal update triggers effects immediately:
+
+```typescript
+import { signal, effect, batch } from '@hellajs/core';
+
+const a = signal(1);
+const b = signal(2);
+const c = signal(3);
+
+effect(() => {
+  console.log('Effect runs:', a(), b(), c());
+});
+// Logs: "Effect runs: 1 2 3" (initial)
+
+// Without batching - effect runs 3 times
+a(10); // Logs: "Effect runs: 10 2 3"
+b(20); // Logs: "Effect runs: 10 20 3"
+c(30); // Logs: "Effect runs: 10 20 30"
+
+// With batching - effect runs only once
+batch(() => {
+  a(100);
+  b(200);
+  c(300);
+}); // Logs: "Effect runs: 100 200 300" (once)
+```
+
+## Nested Batching
+
+Batches can be nested, with all updates deferred until the outermost batch completes.
+
+Batches can be nested - all updates are deferred until the outermost batch completes:
+
+```typescript
+const count = signal(0);
+
+effect(() => {
+  console.log('Count:', count());
+});
+
+const updateCount = () => {
+  batch(() => {
+    count(count() + 1);
+    count(count() + 1);
+  });
+};
+
+batch(() => {
+  updateCount(); // Inner batch
+  updateCount(); // Another inner batch
+  count(100);    // Final update
+}); // Effect runs once with: "Count: 100"
+```
+
+## Common Use Cases
+
+Use batch for state updates that should happen atomically.
+
+```typescript
+// Form validation
+const form = {
+  data: signal({}),
+  errors: signal({}),
+  isValid: signal(false)
+};
+
+const validateForm = (newData) => {
+  batch(() => {
+    form.data(newData);
+    form.errors(validateData(newData));
+    form.isValid(Object.keys(form.errors()).length === 0);
+  });
+};
+
+// Loading states
+const loadData = async () => {
+  batch(() => {
+    isLoading(true);
+    error(null);
+    data(null);
+  });
+  
+  try {
+    const result = await fetchData();
+    batch(() => {
+      data(result);
+      isLoading(false);
+    });
+  } catch (err) {
+    batch(() => {
+      error(err);
+      isLoading(false);
+    });
+  }
+};
+```

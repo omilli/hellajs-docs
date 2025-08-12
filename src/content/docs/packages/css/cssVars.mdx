@@ -1,0 +1,107 @@
+---
+title: cssVars
+description: Define and inject CSS variables from JS objects.
+---
+
+<p >Define and inject CSS variables from JS objects.</p>
+
+Use `css` to generate styles. Supports nesting, pseudo-selectors, and media queries.
+
+```typescript
+import { cssVars } from '@hellajs/css';
+
+cssVars({
+  primary: '#0070f3',
+  borderRadius: '8px',
+  theme: {
+    accent: 'hotpink',
+    spacing: 4
+  }
+});
+```
+
+This injects:
+
+```css
+:root {
+  --primary: #0070f3;
+  --borderRadius: 8px;
+  --theme-accent: hotpink;
+  --theme-spacing: 4;
+}
+```
+
+## Return Value
+
+The function returns CSS variable references that can be used in your styles.
+
+Returns an object mapping each key to its `var(--key)` reference:
+
+```typescript
+const vars = cssVars({ foo: 'red' });
+console.log(vars.foo); // 'var(--foo)'
+
+const styles = css({
+  color: vars.foo
+});
+```
+
+## Reset
+
+Remove all CSS variables that were previously injected by cssVars.
+
+```typescript
+import { cssVarsReset } from '@hellajs/css';
+cssVarsReset();
+```
+
+## Dynamic Variables
+
+Use signals to create reactive CSS variables.
+
+```typescript
+const theme = signal('light');
+const primaryColor = signal('#007bff');
+
+const themeVars = computed(() => cssVars({
+  primary: primaryColor(),
+  background: theme() === 'dark' ? '#333' : '#fff',
+  text: theme() === 'dark' ? '#fff' : '#333'
+}));
+
+// Use in styles
+const buttonStyle = css({
+  backgroundColor: themeVars().primary,
+  color: themeVars().text
+});
+```
+
+## Best Practices
+
+Organize variables by scope and use semantic naming.
+
+```typescript
+// ✅ Good: Semantic, organized variables
+const designTokens = cssVars({
+  colors: {
+    primary: '#0070f3',
+    secondary: '#7928ca',
+    success: '#28a745',
+    danger: '#dc3545'
+  },
+  spacing: {
+    xs: '4px',
+    sm: '8px',
+    md: '16px',
+    lg: '24px'
+  },
+  typography: {
+    fontFamily: 'system-ui, sans-serif',
+    fontSizes: {
+      sm: '14px',
+      md: '16px',
+      lg: '18px'
+    }
+  }
+});
+```

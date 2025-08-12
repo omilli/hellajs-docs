@@ -1,0 +1,100 @@
+---
+title: computed
+description: A read-only signal that automatically updates when dependencies change.
+---
+
+A read-only <a href="/packages/core/signal">signal</a> that updates when dependencies change.
+
+```typescript
+import { signal, computed } from '@hellajs/core';
+
+const items = signal([
+  { id: 1, name: 'Apple', category: 'Fruit' },
+  { id: 2, name: 'Carrot', category: 'Vegetable' },
+  { id: 3, name: 'Banana', category: 'Fruit' }
+]);
+
+const category = signal('Fruit');
+
+const filteredItems = computed(() => 
+  items().filter(item => item.category === category())
+);
+
+console.log(filteredItems());
+ // [{ id: 1, name: 'Apple'... }, { id: 3, name: 'Banana'... }]
+
+category('Vegetable');
+
+console.log(filteredItems());
+// [{ id: 2, name: 'Carrot'... }]
+```
+
+## API
+
+```typescript
+function computed<T>(getter: (previousValue?: T) => T): ComputedSignal<T>
+
+interface ComputedSignal<T> {
+  (): T; // Get current computed value (read-only)
+}
+```
+
+## Lazy Evaluation
+
+Computed signals are lazy, recalculating only when accessed and dependencies have changed.
+
+```typescript
+import { signal, computed } from '@hellajs/core';
+
+const a = signal(1);
+const b = signal(2);
+
+const sum = computed(() => {
+  console.log('Computing sum...');
+  return a() + b();
+});
+
+// No computation yet
+a(10);
+b(20);
+
+// Only now does computation happen
+console.log(sum()); // Logs: "Computing sum..." then "30"
+
+// Accessing again returns cached value
+console.log(sum()); // "30" (no recomputation)
+```
+
+## Error Handling
+
+Handle errors in computed values to prevent crashes.
+
+```typescript
+const data = signal<{ value: number } | null>(null);
+
+const safeComputed = computed(() => {
+  try {
+    return data()?.value ?? 0;
+  } catch (error) {
+    console.error('Computed error:', error);
+    return 0;
+  }
+});
+```
+
+## Best Practices
+
+Keep computed functions pure and avoid side effects.
+
+```typescript
+// ✅ Good: Pure computation
+const total = computed(() => items().reduce((sum, item) => sum + item.price, 0));
+
+// ❌ Bad: Side effects in computed
+const badComputed = computed(() => {
+  const result = items().length;
+  console.log(result); // Side effect!
+  return result;
+});
+```
+
