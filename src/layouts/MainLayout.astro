@@ -1,0 +1,41 @@
+---
+import Navbar from "../components/Navbar.astro";
+import Sidebar from "../components/Sidebar.astro";
+import RightSidebar from "../components/RightSidebar.astro";
+import "../global.css";
+
+const { frontmatter = {}, headings = [], title: pageTitle } = Astro.props;
+const title = frontmatter.title || pageTitle;
+
+const filteredHeadings = headings.filter(
+  (h: { text: string; slug: string; depth: number }) =>
+    h.depth > 1 && h.depth < 4,
+);
+const showRightSidebar = filteredHeadings.length > 0;
+---
+
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | HellaJS</title>
+  </head>
+  <body>
+    <Navbar />
+    <Sidebar>
+      <div class="pt-16 pb-16 lg:pb-0">
+        <main
+          class:list={[
+            "flex-1 p-4 prose max-w-none lg:p-8 mt-6",
+            { "lg:mr-80": showRightSidebar },
+          ]}
+        >
+          <slot />
+        </main>
+        <RightSidebar headings={headings} />
+      </div>
+    </Sidebar>
+  </body>
+</html>

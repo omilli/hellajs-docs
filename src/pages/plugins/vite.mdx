@@ -1,0 +1,40 @@
+---
+title: Vite Plugin
+description: Transform HellaJS JSX with Vite
+layout: ../../layouts/MainLayout.astro
+---
+
+# Vite Plugin
+
+The Vite plugin provides JSX transformation for HellaJS with lightning-fast hot module replacement (HMR) and optimized development experience.
+
+## Installation
+
+```bash
+npm install --save-dev vite-plugin-hellajs
+```
+## Configuration
+
+Add the plugin to your `vite.config.js`:
+
+```js
+import { defineConfig } from 'vite';
+import viteHellaJS from 'vite-plugin-hellajs';
+
+export default defineConfig({
+  plugins: [viteHellaJS()]
+});
+```
+
+## TypeScript
+
+The plugin includes full TypeScript support. Configure your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "types": ["@hellajs/dom"]
+  }
+}
+```

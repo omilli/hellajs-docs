@@ -1,0 +1,314 @@
+---
+layout: ../../../layouts/MainLayout.astro
+title: Reactivity
+description: Understanding fine-grained reactivity and core primitives.
+---
+import { Icon } from "astro-icon/components";
+
+
+# Reactivity With Signals
+
+The HellaJS core package is a reactive system that automatically tracks dependencies between data and computations. This lets you build applications where changes in state automatically propagate, eliminating the need for manual subscriptions.
+
+<div role="alert" class="alert alert-info alert-soft text-base">
+  <Icon name="ph:info" width={24} height={24} />
+  <span>The core package is a heavily modified fork of the excellent Alien Signals library.</span>
+</div>
+
+## Reactive Primitives
+
+Three core primitives form the foundation of reactivity:
+
+### Signals - Reactive State
+
+Reactive containers that notify dependent computations when their value changes.
+
+Check out the [signal](/reference/core/signal) API Reference. 
+
+```js
+const count = signal(0);
+
+// Reading values (getter)
+console.log(count()); // 0
+
+// Setting values (setter) - triggers dependency updates
+count(5);
+
+// Update value
+console.log(count()); // 5
+```
+
+### Computed - Derived Values
+
+Derived values that automatically recompute when their dependencies change.
+
+Computed functions are lazily evaluated and cached, only recalculating when accessed AND their dependencies have changed.
+
+Check out the [computed](/reference/core/computed) API Reference.
+
+```js
+const count = signal(0);
+const doubled = computed(() => count() * 2);
+
+console.log(doubled()); // 0
+
+count(5);
+
+console.log(doubled()); // 10 - automatically recalculated
+```
+
+### Effects - Reactive Side Effects
+
+Side effects that run immediately when reactive dependencies change. Unlike computed values, effects run eagerly.
+
+Check out the [effect](/reference/core/effect) API Reference.
+
+```js
+const count = signal(0);
+const doubled = computed(() => count() * 2);
+
+// Effect automatically tracks dependencies
+effect(() => {
+  console.log(`Count: ${count()}, Doubled: ${doubled()}`);
+});
+
+count(5); // Logs: "Count: 5, Doubled: 10"
+```
+
+## Working with Data
+
+### Immutable Updates
+
+[Signals](/reference/core/signal) detect changes using reference equality. You must create new objects or arrays rather than mutating existing ones.
+
+```js
+const todos = signal([
+  { id: 1, text: 'Learn HellaJS', done: false },
+  { id: 2, text: 'Build an app', done: false }
+]);
+
+// ❌ Mutation doesn't trigger reactivity
+todos().push({ id: 3, text: 'New todo', done: false }); // No update
+todos()[0].done = true;                                 // No update
+
+// ✅ Immutable updates trigger reactivity
+todos([...todos(), { id: 3, text: 'New todo', done: false }]);  // Creates new array
+```
+
+### Async Operations in Effects
+
+Effects should handle asynchronous operations manually. The effect function itself should not be async, but can contain async operations.
+
+```js
+const todoId = signal(1);
+const todoDetails = signal(null);
+const loading = signal(false);
+
+effect(() => {
+  const id = todoId();
+  
+  loading(true);
+  fetch(`/api/todos/${id}`)
+    .then(response => response.json())
+    .then(todo => {
+      todoDetails(todo);
+      loading(false);
+    })
+    .catch(error => {
+      console.error('Failed to load todo:', error);
+      todoDetails(null);
+      loading(false);
+    });
+});
+
+// Changing todoId automatically triggers new API call
+todoId(2);
+```
+
+### Conditional Dependencies
+
+Conditional logic in [computed](/reference/core/computed) values and [effects](/reference/core/effect) determines which signals become dependencies.
+
+```js
+const view = signal('counter');
+const count = signal(0);
+const todos = signal([]);
+
+const currentTitle = computed(() => {
+  const currentView = view();
+  
+  // Only the relevant signal becomes a dependency
+  if (currentView === 'counter') {
+    return `Count: ${count()}`;  // Only tracks count
+  } else {
+    return `Todos: ${todos().length}`;  // Only tracks todos
+  }
+});
+
+todos([...todos(), { id: 1, text: 'New todo', done: false }]); // currentTitle doesn't update
+view('todos'); // currentTitle updates and now tracks todos
+```
+
+### Transformation Chains
+
+[Computed](/reference/core/computed) values create transformation pipelines that efficiently propagate changes through complex data flows.
+
+```js
+const todos = signal([
+  { id: 1, text: 'Learn HellaJS', done: false },
+  { id: 2, text: 'Build an app', done: false },
+  { id: 3, text: 'Write docs', done: true }
+]);
+
+const activeTodos = computed(() => todos().filter(t => !t.done));
+
+const todoTotals = computed(() => ({
+  total: todos().length,
+  active: activeTodos().length,
+}));
+
+console.log(todoTotals()); // { total: 3, active: 2 }
+
+todos([...todos(), { id: 4, text: 'New task', done: false}]);
+console.log(todoTotals()); // { total: 4, active: 3 } - entire chain updates
+```
+
+## Optimization Strategies
+
+### Batching Updates
+
+Groups multiple [signal](/reference/core/signal) updates into a single execution, preventing computations and effects from running until all updates are completed.
+
+Check out the [batch](/reference/core/batch) API Reference.
+
+```js
+const count = signal(0);
+const multiplier = signal(1);
+const result = computed(() => count() * multiplier());
+
+// Effect runs when result changes
+effect(() => {
+  console.log(`Result: ${result()}`);
+});
+
+// Without batching - result computes twice
+count(5);        // Logs: "Result: 5"
+multiplier(2);   // Logs: "Result: 10"
+
+// With batching - result computes once
+batch(() => {
+  count(10);     // No effect execution yet
+  multiplier(3); // No effect execution yet
+});              // Logs: "Result: 30"
+```
+
+### Reactive Stores
+
+Each property (_with deep nesting support_) in a [store](/reference/store/store) is a [signal](/reference/core/signal), preventing unnecessary recomputations when unrelated properties change.
+
+Check out the [store](/reference/store/store) API Reference.
+
+```js
+// ❌ Over-reactive - any property change updates everything
+const counter = signal({ value: 0, max: 10, multiplier: 1 });
+const displayText = computed(() => `Count: ${counter().value}`);
+
+counter({ ...counter(), priority: 'medium' }); // displayText recalculates unnecessarily
+
+// ✅ Fine-grained - using store for related data
+import { store } from '@hellajs/store';
+
+const counter = store({
+  value: 0,
+  max: 10,
+  multiplier: 1,
+});
+
+const displayText = computed(() => `Count: ${counter().value()}`);
+counter().multiplier(2); // Updates multiplier, displayText unaffected
+counter().value(1); // Updates value, displayText recalculates
+
+console.log(displayText()); // "Count: 1"
+
+```
+
+### Untracked Reads
+
+Read [signal](/reference/core/signal) values without establishing a dependency relationship and prevent triggering updates when that signal changes.
+
+Check out the [untracked](/reference/core/untracked) API Reference.
+
+```js
+const count = signal(0);
+const expensiveComputation = computed(() => {
+  // Simulate expensive operation
+  return untracked(() => {
+    console.log('Expensive computation running');
+    return count() * 1000;
+  });
+});
+
+```
+
+### Effect Cleanup
+
+Effects return a cleanup function that removes the effect from the reactive system, preventing memory leaks.
+
+```js
+const count = signal(0);
+const cleanup = effect(() => {
+  console.log(`Count: ${count()}`);
+});
+// Later, when no longer needed
+cleanup(); // Stops tracking count changes
+```
+
+## Internal Mechanics
+
+The reactive system uses a graph-based approach to track dependencies and propagate changes efficiently.
+
+#### Reactive Nodes
+
+Every [signal](/reference/core/signal), [computed](/reference/core/computed), and [effect](/reference/core/effect) is a **reactive node** in the dependency graph. Each node maintains:
+- **Dependencies** - The reactive values it reads from
+- **Subscribers** - The reactive computations that read from it
+- **State flags** - Internal status for efficient update coordination
+
+```
+Signal A ── Computed B ── Effect C
+    ↑            ↑            ↑
+ (source)    (dependency)  (subscriber)
+```
+
+#### Dependency Graph
+
+The reactive system forms a directed graph where each edge represents a dependency relationship. This graph structure enables efficient propagation of changes from source signals to all dependent computations and effects. The graph uses doubly-linked connections for efficient addition and removal of dependencies as computations re-execute and establish new dependency relationships.
+
+#### State Flags
+
+Each reactive node uses efficient bit flags to track its current state throughout the update cycle:
+- **Clean** - The value is current and no recalculation is needed
+- **Dirty** - Dependencies have changed and re-evaluation is required
+- **Pending** - Marked during propagation as potentially needing updates
+- **Computing** - Currently executing a computation function
+- **Tracking** - Actively recording new dependencies during execution
+
+#### Update Propagation
+
+When a signal changes, the system orchestrates updates through a carefully designed process:
+
+1. **Mark Subscribers** - All dependent nodes are marked as dirty
+2. **Schedule Effects** - Effects are queued for immediate execution  
+3. **Process Updates** - The system processes updates in dependency order
+4. **Lazy Evaluation** - Computed values recalculate only when accessed
+5. **Execute Effects** - Scheduled effects run after all signal updates complete
+
+This hybrid approach optimizes performance by making computed values lazy (calculated on-demand) while keeping effects eager (executing immediately when dependencies change).
+
+#### Memory Management
+
+The reactive system includes automatic memory management to prevent leaks and optimize performance:
+
+- **Dependency Cleanup** - Old dependencies are automatically removed when computations re-execute
+- **Link Recycling** - Internal connection objects are reused to minimize memory allocation
+- **Effect Disposal** - Cleanup functions fully disconnect effects from the dependency graph

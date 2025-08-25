@@ -1,0 +1,105 @@
+---
+import NavItem from "./NavItem.astro";
+import type { MarkdownInstance } from "astro";
+import { navigation } from "../nav.ts";
+import type { NavNode } from "../types/navigation.ts";
+
+const allDocs = Object.values(
+  import.meta.glob<MarkdownInstance<Record<string, any>>>("../pages/**/*.mdx", {
+    eager: true,
+  }),
+);
+const { pathname } = Astro.url;
+
+const getSection = (path: string) => {
+  if (path.startsWith("/learn")) return "learn";
+  if (path.startsWith("/reference")) return "reference";
+  if (path.startsWith("/plugins")) return "plugins";
+  return null;
+};
+
+const transformNav = (nav: any, basePath = ""): NavNode[] => {
+  if (!Array.isArray(nav)) return [];
+
+  return nav.map((item) => {
+    if (typeof item === "string") {
+      const url = `${basePath}/${item.toLowerCase()}`;
+      const doc = allDocs.find((d) => d.url === url);
+      const title = doc?.frontmatter?.title || item.replace(/-/g, " ");
+      return { title, url };
+    }
+    if (typeof item === "object") {
+      const [folderName, children] = Object.entries(item)[0];
+      const url = `${basePath}/${folderName.toLowerCase()}`;
+      const doc = allDocs.find((d) => d.url === url);
+      const title = doc?.frontmatter?.title || folderName.replace(/-/g, " ");
+      return {
+        title,
+        children: transformNav(children, url),
+      };
+    }
+    return item as NavNode;
+  });
+};
+
+const currentSection = getSection(pathname);
+const sectionNodes = currentSection
+  ? transformNav(navigation[currentSection], `/${currentSection}`)
+  : [];
+
+const mainNavLinks = [
+  { label: "Learn", root: "/learn" },
+  {
+    label: "API Reference",
+    root: "/reference",
+  },
+  { label: "Plugins", root: "/plugins" },
+];
+---
+
+<!-- Mobile drawer -->
+<div class="drawer lg:drawer-open">
+  <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
+
+  <!-- Main content area -->
+  <div class="drawer-content">
+    <slot />
+  </div>
+
+  <!-- Sidebar -->
+  <div class="drawer-side">
+    <label
+      for="sidebar-drawer"
+      aria-label="close sidebar"
+      class="drawer-overlay lg:hidden"></label>
+    <aside class="min-h-full w-80 bg-base-300 text-base-content pt-16! lg:pt-0">
+      <ul class="menu p-4 w-full">
+        <!-- Main navigation links - only show on mobile -->
+        <div class="lg:hidden">
+          {
+            mainNavLinks.map((link) => (
+              <li>
+                <a
+                  href={link.root}
+                  class:list={{
+                    "text-primary font-bold": pathname.startsWith(link.root),
+                  }}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <div class="divider"></div>
+        </div>
+
+        <!-- Section-specific navigation -->
+        {
+          sectionNodes.map((node) => (
+            <NavItem node={node} pathname={pathname} />
+          ))
+        }
+      </ul>
+    </aside>
+  </div>
+</div>

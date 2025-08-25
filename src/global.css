@@ -1,0 +1,99 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui";
+
+@font-face {
+  font-family: 'Mulish Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 1000;
+  src: url(@fontsource-variable/mulish/files/mulish-latin-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@theme {
+  --color-base-50: hsl(222.2 47.4% 14%);
+}
+
+:root {
+  /* Your preferred text font. Starlight uses a system font stack by default. */
+  --font-sans: 'Mulish Variable', sans-serif;
+
+  --color-primary: #38EBFF;
+  --color-primary-content: #090e19;
+
+  --color-base-100: hsl(222.2 47.4% 8%);
+  --color-base-200: hsl(222.2 47.4% 7%);
+  --color-base-300: hsl(222.2 47.4% 6%);
+
+  --pagefind-ui-scale: 0.8;
+  --pagefind-ui-primary: var(--color-base-content);
+  --pagefind-ui-text: var(--color-base-content);
+  --pagefind-ui-background: var(--color-base-50);
+  --pagefind-ui-border: var(--color-base-50);
+}
+
+.pagefind-ui .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
+  @apply absolute left-0 right-0 mt-2 z-[9999] px-8 pb-4 max-h-[60vh] overflow-y-auto shadow-xl rounded bg-[var(--pagefind-ui-background)];
+}
+
+.pagefind-ui__result-thumb {
+  @apply hidden;
+}
+
+.pagefind-ui--reset mark {
+  @apply bg-primary rounded px-0.5 py-0.25;
+}
+
+main {
+
+  h1,
+  h2,
+  h3 {
+    scroll-margin-top: 5rem;
+  }
+}
+
+.menu {
+  --menu-active-bg: var(--color-base-50);
+  --menu-active-fg: var(--color-primary);
+}
+
+.menu :where(li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title):hover, li:not(.menu-title, .disabled) > details > summary:not(.menu-title)):not(.menu-active, :active, .btn):hover {
+  background-color: var(--color-base-50) !important;
+}
+
+.menu-active {
+  @apply font-bold text-primary
+}
+
+pre {
+  background-color: var(--color-base-50) !important;
+  @apply shadow-xl border border-slate-700 overflow-x-auto max-w-[93vw];
+}
+
+:where(code):not(pre > code) {
+  background-color: var(--color-base-50) !important;
+  @apply border border-slate-600 rounded px-1 py-0.5;
+}
+
+.hero-code {
+  background: var(--color-base-50);
+
+  pre {
+    @apply border-none shadow-none text-base;
+  }
+}
+
+.ti-cursor {
+  display: none !important;
+}
+
+/* Sidebar toggle icons in navbar */
+#sidebar-drawer:checked~* .sidebar-hamburger {
+  @apply hidden;
+}
+
+#sidebar-drawer:checked~* .sidebar-close {
+  @apply block
+}

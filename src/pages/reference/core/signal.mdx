@@ -1,0 +1,159 @@
+---
+title: signal
+description: Create reactive state that automatically updates your UI when values change.
+layout: ../../../layouts/MainLayout.astro
+---
+
+# signal
+
+Create reactive state that automatically updates your UI when values change.
+
+## API
+
+```typescript
+function signal<T>(): {
+  (): T | undefined;
+  (value: T | undefined): void;
+};
+function signal<T>(initialValue: T): {
+  (): T;
+  (value: T): void;
+};
+```
+- `initialValue`: The initial value for the signal (optional).
+- **Returns**: A signal function that can be called to read (no arguments) or write (with argument) the value.
+
+## TypeScript
+
+The `signal` function infers its type from the initial value, or can be explicitly typed.
+
+```typescript
+import { signal, Signal } from '@hellajs/core';
+
+// Type is inferred as Signal<number>
+const count = signal(0);
+
+// Type is inferred as Signal<string>
+const name = signal('Alice');
+
+// Explicit typing for complex types
+type Status = 'loading' | 'success' | 'error';
+const status = signal<Status>('loading');
+
+// Optional signals  
+const user = signal<User | undefined>();
+
+// The Signal<T> type represents the returned function
+const getValue: Signal<number> = signal(42);
+```
+
+## Basic Usage
+
+Signals are reactive containers that automatically notify dependents when their value changes.
+
+```typescript
+import { signal } from '@hellajs/core';
+
+// Create a signal with an initial value
+const count = signal(0);
+const name = signal('World');
+
+// Read the current value
+console.log(count()); // 0
+
+// Update the value  
+count(5);
+console.log(count()); // 5
+
+// Use in JSX - pass the signal function, not the called value
+const App = () => {
+  return (
+    <div>
+      <h1>Hello, {name}!</h1>
+      <p>Count: {count}</p>
+      <button onClick={() => count(count() + 1)}>
+        Increment
+      </button>
+      <input 
+        value={name} 
+        onInput={e => name(e.target.value)} 
+      />
+    </div>
+  );
+};
+```
+
+> **Key Point**: Use `{count}` in JSX (not `{count()}`). HellaJS automatically calls the signal function and creates reactive bindings.
+
+## Key Concepts
+
+### Reactive Binding
+Signals automatically create reactive bindings when accessed inside other reactive contexts like [`computed`](/reference/core/computed) or [`effect`](/reference/core/effect).
+
+```typescript
+const count = signal(0);
+
+// The computed automatically tracks the signal
+const doubled = computed(() => count() * 2);
+
+// The effect runs when count changes
+effect(() => {
+  console.log(`Count is: ${count()}`);
+});
+
+count(5); // Triggers both the computed and effect
+```
+
+### Value Equality
+Signals only trigger updates when the new value is different from the current value using strict equality (`!==`).
+
+```typescript
+const name = signal('Alice');
+
+effect(() => console.log('Effect triggered:', name()));
+
+name('Alice'); // No effect triggered - same value
+name('Bob');   // Effect triggered - different value
+```
+
+### Synchronous Updates
+Signal updates are synchronous by default. Effects run immediately unless wrapped in a [`batch`](/reference/core/batch).
+
+```typescript
+const a = signal(1);
+const b = signal(2);
+
+effect(() => console.log('Sum:', a() + b()));
+
+a(10); // Logs immediately: "Sum: 12"
+b(20); // Logs immediately: "Sum: 30"
+```
+
+## Important Considerations
+
+### Direct Mutation Prevention
+
+Avoid mutating objects or arrays stored in signals. This bypasses reactivity and can lead to stale UI states.
+
+```typescript
+const todos = signal([{ id: 1, text: 'Learn HellaJS' }]);
+
+// ❌ Direct mutation - no updates triggered
+todos()[0].text = 'Learn Signals';
+
+// ✅ Create new reference to trigger updates
+todos(todos().map(todo => 
+  todo.id === 1 ? { ...todo, text: 'Learn Signals' } : todo
+));
+```
+
+### Memory Management
+
+Signals hold references to their last values. For large objects, consider clearing references when no longer needed.
+
+```typescript
+const largeData = signal(/* large object */);
+
+// Clear when no longer needed
+largeData(undefined);
+```

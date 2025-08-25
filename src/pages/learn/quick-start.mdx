@@ -1,0 +1,98 @@
+---
+layout: ../../layouts/MainLayout.astro
+title: Quick Start
+description: Get started with HellaJS in minutes using Vite.
+---
+
+# Get Started with HellaJS
+
+Get up and running with HellaJS in less than a minute with Vite.
+
+## Create a Vite Project
+
+Use your favorite package manager to scaffold a new Vite project.
+
+```bash
+npm create vite@latest my-hella-app -- --template vanilla
+```
+
+## Install HellaJS
+
+Navigate into your new project directory and install the necessary packages and the Vite plugin.
+
+```bash
+cd my-hella-app
+npm install @hellajs/core @hellajs/dom
+npm install -D vite-plugin-hellajs
+```
+
+## Configuration
+
+Update your `vite.config.js` to use the HellaJS plugin.
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite';
+import viteHellaJS from 'vite-plugin-hellajs';
+
+export default defineConfig({
+  plugins: [viteHellaJS()],
+});
+```
+
+If you're using TypeScript, add type definitions. Update your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    //...
+    "jsx": "preserve",
+    "types": ["hellajs"]
+    //...
+  }
+}
+```
+
+## Create Your App
+
+Replace the content of `main.js` with your first app.
+
+```jsx
+// main.js
+import { signal } from "@hellajs/core";
+import { mount } from "@hellajs/dom";
+
+const App = () => {
+  const count = signal(0);
+
+  return (
+    <>
+      <h1>Hello, HellaJS!</h1>
+      <button onClick={() => count(count() + 1)}>
+        Clicked {count} times
+      </button>
+    </>
+  );
+};
+
+mount(App, '#app');
+```
+
+## Dev Server
+
+Start the development server to see your app in action.
+
+```bash
+npm run dev
+```
+
+Your app will be running at `http://localhost:5173`.
+
+---
+
+## Next Steps
+
+Now that you have a basic HellaJS app running, you can:
+
+- Explore core concepts like [Reactivity](/learn/concepts/reactivity).
+- Check out the [API Reference](/reference/core/signal)
