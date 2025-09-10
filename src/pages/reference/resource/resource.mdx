@@ -20,13 +20,46 @@ function resource<T, K>(fetcher: (key: K) => Promise<T>, options?: ResourceOptio
 // The returned resource object
 interface Resource<T> {
   data: ReadonlySignal<T | undefined>;
-  error: ReadonlySignal<unknown>;
+  error: ReadonlySignal<ResourceError | undefined>;
   loading: ReadonlySignal<boolean>;
-  status: ReadonlySignal<"idle" | "loading" | "success" | "error">;
+  status: ReadonlySignal<ResourceStatus>;
+  /** @deprecated Use get() instead */
   fetch(): void;
+  get(): void;
   request(): void;
   abort(): void;
   invalidate(): void;
+  setData: (updater: T | ((old: T | undefined) => T)) => void;
+  cacheKey: () => unknown;
+  mutate: <TVariables = any>(variables: TVariables) => Promise<T>;
+  reset(): void;
+}
+
+type ResourceStatus = "idle" | "loading" | "success" | "error";
+
+type ResourceErrorCategory = 
+  | 'network' | 'validation' | 'authorization' | 'not_found' 
+  | 'server' | 'client' | 'timeout' | 'abort' | 'unknown';
+
+interface ResourceError {
+  message: string;
+  category: ResourceErrorCategory;
+  statusCode?: number;
+  originalError?: unknown;
+}
+
+interface ResourceOptions<T, K> {
+  key?: () => K;
+  enabled?: boolean;
+  initialData?: T;
+  cacheTime?: number;
+  timeout?: number;
+  abortSignal?: AbortSignal;
+  deduplicate?: boolean;
+  onSuccess?: (data: T) => void;
+  onError?: (err: unknown) => void;
+  onMutate?: <TVariables, TContext = unknown>(variables: TVariables) => Promise<TContext> | TContext;
+  onSettled?: <TVariables, TContext = unknown>(data?: T, error?: unknown, variables?: TVariables, context?: TContext) => Promise<void> | void;
 }
 ```
 
@@ -45,7 +78,7 @@ const usersResource = resource(() =>
 
 ## Basic Usage
 
-A resource does **not** fetch data on creation. You must call `.fetch()` or `.request()` to initiate the data loading process.
+A resource does **not** fetch data on creation. You must call `.get()` or `.request()` to initiate the data loading process.
 
 ```typescript
 import { resource } from '@hellajs/resource';
@@ -65,16 +98,22 @@ effect(() => {
 });
 
 // 3. Start fetching
-usersResource.fetch();
+usersResource.get();
 ```
 
 ## Key Concepts
 
-### Fetch Control
-- `.fetch()`: Fetches data, using a cached value if available and not expired.
-- `.request()`: Forces a new fetch, ignoring the cache.
-- `.invalidate()`: Clears the cache for the current key and triggers a `.request()`.
-- `.abort()`: Cancels any ongoing request and resets state.
+### Control Methods
+
+- `.get()`: Cache-first fetch (uses cached data if valid and not expired)
+- `.fetch()`: **Deprecated** - Use `.get()` instead
+- `.request()`: Forces a new fetch, ignoring cache completely  
+- `.abort()`: Cancels ongoing request and resets to initial state
+- `.invalidate()`: Clears cache entry and triggers fresh `.request()`
+- `.setData(updater)`: Manually update cached data with value or function
+- `.reset()`: Reset resource to initial state (clears data, error, loading)
+- `.mutate(variables)`: Execute mutation with given variables
+- `.cacheKey()`: Get current cache key for debugging
 
 ### Reactive Keys
 The `key` option makes a resource dynamic. The resource will fetch data based on the value returned by the `key` function. This is the primary way to create resources that depend on other reactive state.
@@ -88,11 +127,11 @@ const userResource = resource(
 );
 
 // Fetch user 1
-userResource.fetch();
+userResource.get();
 
-// To fetch a different user, change the key and call fetch again
+// To fetch a different user, change the key and call get again
 userId(2);
-userResource.fetch();
+userResource.get();
 ```
 
 ### Caching
@@ -124,14 +163,14 @@ async function updateUser(data) {
 
 ### Manual Fetching
 
-Resources don't auto-fetch on creation - you must explicitly call `.fetch()` or `.request()`.
+Resources don't auto-fetch on creation - you must explicitly call `.get()` or `.request()`.
 
 ```typescript
 // ❌ No data fetched yet
 const userResource = resource(() => fetch('/api/user'));
 console.log(userResource.data()); // undefined
 // ✅ Explicitly fetch data
-userResource.fetch();
+userResource.get();
 ```
 
 ### Memory Management
