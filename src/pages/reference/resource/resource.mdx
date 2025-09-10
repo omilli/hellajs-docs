@@ -4,6 +4,8 @@ description: Reactive async data fetching with caching, abort, and mutation.
 layout: ../../../layouts/MainLayout.astro
 ---
 
+import { Icon } from "astro-icon/components";
+
 # resource
 
 Reactive async data fetching with caching, abort, and mutation.
@@ -49,8 +51,9 @@ interface ResourceError {
 }
 
 interface ResourceOptions<T, K> {
-  key?: () => K;
+  key?: (() => K) | K;
   enabled?: boolean;
+  auto?: boolean;
   initialData?: T;
   cacheTime?: number;
   timeout?: number;
@@ -115,15 +118,33 @@ usersResource.get();
 - `.mutate(variables)`: Execute mutation with given variables
 - `.cacheKey()`: Get current cache key for debugging
 
-### Reactive Keys
-The `key` option makes a resource dynamic. The resource will fetch data based on the value returned by the `key` function. This is the primary way to create resources that depend on other reactive state.
+### Cache Keys
+The `key` option is used for caching and deduplication. You can provide either a static value for simple cases or a function for reactive behavior.
+
+#### Static Keys
+For resources that don't depend on changing parameters, use a static string or value:
+
+```typescript
+const configResource = resource(
+  () => fetch('/api/config').then(r => r.json()),
+  { key: 'app-config' } // Static string key
+);
+
+const userProfileResource = resource(
+  () => fetch('/api/me').then(r => r.json()),
+  { key: 'current-user' } // Another static key
+);
+```
+
+#### Reactive Keys
+For dynamic resources that depend on other reactive state, use a function that returns the key:
 
 ```typescript
 const userId = signal(1);
 
 const userResource = resource(
   (id) => fetch(`/api/users/${id}`).then(r => r.json()),
-  { key: () => userId() } // Depends on the userId signal
+  { key: () => userId() } // Reactive function key
 );
 
 // Fetch user 1
@@ -133,6 +154,33 @@ userResource.get();
 userId(2);
 userResource.get();
 ```
+
+### Auto-Fetch
+Set `auto: true` to automatically refetch when reactive key dependencies change. This eliminates the need to manually call `.get()` after key changes.
+
+```typescript
+const userId = signal(1);
+
+const userResource = resource(
+  (id) => fetch(`/api/users/${id}`).then(r => r.json()),
+  { 
+    key: () => userId(), // Reactive key function
+    auto: true // Automatically refetch when userId changes
+  }
+);
+
+// Initial fetch happens automatically on first effect run
+// No need to call userResource.get()
+
+// Changing userId automatically triggers a new fetch
+userId(2); // Resource automatically fetches user 2
+userId(3); // Resource automatically fetches user 3
+```
+
+<div role="alert" class="alert alert-info alert-soft text-base">
+  <Icon name="ph:info" width={24} height={24} />
+  <span>Auto-fetch only works with reactive key functions. Static key values won't trigger automatic refetches since they don't change. If your key function uses signals or computed values, the resource will automatically track those dependencies and refetch when they change.</span>
+</div>
 
 ### Caching
 Set `cacheTime` (in milliseconds) to enable caching. Each unique key gets its own cache entry.
@@ -161,16 +209,20 @@ async function updateUser(data) {
 
 ## Important Considerations
 
-### Manual Fetching
+### Manual vs Auto Fetching
 
-Resources don't auto-fetch on creation - you must explicitly call `.get()` or `.request()`.
+By default, resources don't auto-fetch on creation - you must explicitly call `.get()` or `.request()`. Set `auto: true` for automatic fetching when key dependencies change.
 
 ```typescript
-// ❌ No data fetched yet
+// ❌ No data fetched yet (manual mode)
 const userResource = resource(() => fetch('/api/user'));
 console.log(userResource.data()); // undefined
 // ✅ Explicitly fetch data
 userResource.get();
+
+// ✅ Auto-fetch mode
+const autoResource = resource(() => fetch('/api/user'), { auto: true });
+// Data fetches automatically when effect runs
 ```
 
 ### Memory Management

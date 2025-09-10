@@ -108,7 +108,7 @@ const cachedUser = resourceCache.get(`user:${userId()}`);
 Control cache size limits and eviction strategies globally.
 
 ```typescript
-// Set cache limits to prevent memory issues
+// Configure global cache behavior
 resourceCache.setConfig({
   maxSize: 5000,      // Allow up to 5000 cached entries
   enableLRU: true     // Evict least recently used entries
@@ -173,31 +173,26 @@ const userKeyGen = resourceCache.generateKeys<{id: number}>()
 const postKeyGen = resourceCache.generateKeys<{userId: number, postId: number}>()
   (params => `user:${params.userId}:posts:${params.postId}`);
 
-// Use generated keys
+// Use generated keys consistently
 const userKey = userKeyGen({ id: 123 }); // 'user:123'
 const postKey = postKeyGen({ userId: 123, postId: 456 }); // 'user:123:posts:456'
-
-// Keys are consistent across your application
-resourceCache.set(userKey, userData);
-const user = resourceCache.get(userKey);
 ```
 
-### Cache Inspection
+### Cache Lifecycle Management
 
-Monitor and debug cache state.
+Handle cache expiration and automatic cleanup.
 
 ```typescript
-// Check cache size and contents
-console.log('Cache entries:', resourceCache.map.size);
-console.log('Cache limit:', resourceCache.config.maxSize);
+// Set short-lived cache entries
+resourceCache.set('temporary', tempData, 5000); // 5 seconds
 
-// Inspect cache contents (development only)
-for (const [key, entry] of resourceCache.map) {
-  console.log(`${key}: ${JSON.stringify(entry.data)}`);
-}
+// Manual cleanup removes expired entries
+setTimeout(() => {
+  resourceCache.cleanup();
+  console.log('Temporary data expired:', !resourceCache.get('temporary'));
+}, 6000);
 
-// Force cleanup of expired entries
-resourceCache.cleanup();
+// Cleanup runs automatically, but can be triggered manually
 ```
 
 ### Resource Integration
@@ -215,60 +210,20 @@ resourceCache.createInvalidator([
   userPostsResource, 
   userSettingsResource
 ]);
-// All three resources are now invalidated
 ```
 
-## Advanced Usage
+## Important Considerations
 
-### LRU Eviction Management
+### Efficient Cache Patterns
 
-Control how the cache handles memory limits.
-
-```typescript
-// Configure LRU behavior
-resourceCache.setConfig({
-  maxSize: 1000,      // Limit cache to 1000 entries
-  enableLRU: true     // Automatically evict oldest entries
-});
-
-// Cache will automatically remove least recently used entries
-// when maxSize is exceeded
-for (let i = 0; i < 1500; i++) {
-  resourceCache.set(`item:${i}`, { data: i }, 60000);
-}
-
-// Only the most recent 1000 entries will remain
-console.log('Entries after eviction:', resourceCache.map.size); // 1000
-```
-
-### Cache Lifecycle Management
-
-Handle cache expiration and cleanup.
-
-```typescript
-// Set short-lived cache entries
-resourceCache.set('temporary', tempData, 5000); // 5 seconds
-
-// Manual cleanup removes expired entries
-setTimeout(() => {
-  resourceCache.cleanup();
-  console.log('Temporary data expired:', !resourceCache.get('temporary'));
-}, 6000);
-
-// Cleanup runs automatically every 60 seconds
-// but can be triggered manually for immediate cleanup
-```
-
-### Memory Usage Optimization
-
-Efficient patterns for large applications.
+Use selective invalidation and batch operations for optimal performance.
 
 ```typescript
 // Use selective key invalidation instead of clearing entire cache
 const clearUserData = (userId: number) => {
   const keysToInvalidate = [
     `user:${userId}`,
-    `user:${userId}:posts`,
+    `user:${userId}:posts`, 
     `user:${userId}:settings`,
     `user:${userId}:profile`
   ];
@@ -287,50 +242,23 @@ const updateUserStatuses = (userUpdates: Array<{id: number, online: boolean}>) =
 };
 ```
 
-## Important Considerations
+### Consistent Key Design
 
-### Cache Key Design
-
-Use consistent, hierarchical key patterns for better organization.
+Use hierarchical, predictable key patterns for better organization.
 
 ```typescript
-// ✅ Good key patterns
+// ✅ Good key patterns - hierarchical and consistent
 'user:123'
-'user:123:posts'
+'user:123:posts'  
 'user:123:settings'
 'posts:category:tech'
 
-// ❌ Avoid random or inconsistent keys
+// ❌ Avoid random or inconsistent patterns
 'random-123'
 'user_data_for_john'
 'PostsInTechCategory'
-```
 
-### Memory Management
-
-Monitor cache size in production applications.
-
-```typescript
-// Set reasonable limits based on your application's needs
-resourceCache.setConfig({
-  maxSize: 2000,      // Adjust based on available memory
-  enableLRU: true     // Enable automatic cleanup
-});
-
-// Monitor cache usage
-setInterval(() => {
-  const usage = resourceCache.map.size;
-  const limit = resourceCache.config.maxSize;
-  console.log(`Cache usage: ${usage}/${limit} (${Math.round(usage/limit*100)}%)`);
-}, 30000);
-```
-
-### Type Safety
-
-Leverage TypeScript for better cache operations.
-
-```typescript
-// Define cache key types for better type safety
+// Generate keys consistently with typed functions
 type UserCacheKey = `user:${number}`;
 type PostCacheKey = `user:${number}:posts:${number}`;
 
@@ -338,7 +266,33 @@ const getUserKey = (id: number): UserCacheKey => `user:${id}`;
 const getPostKey = (userId: number, postId: number): PostCacheKey => 
   `user:${userId}:posts:${postId}`;
 
-// Type-safe cache operations
+// Type-safe usage
 resourceCache.set(getUserKey(123), userData);
 const user = resourceCache.get(getUserKey(123));
+```
+
+### Production Memory Management
+
+Monitor and control cache size to prevent memory issues.
+
+```typescript
+// Configure appropriate limits for your application
+resourceCache.setConfig({
+  maxSize: 2000,      // Adjust based on available memory
+  enableLRU: true     // Enable automatic cleanup
+});
+
+// Monitor cache usage in production
+setInterval(() => {
+  const usage = resourceCache.map.size;
+  const limit = resourceCache.config.maxSize;
+  const percentage = Math.round(usage/limit*100);
+  
+  console.log(`Cache usage: ${usage}/${limit} (${percentage}%)`);
+  
+  // Alert if cache usage is high
+  if (percentage > 90) {
+    console.warn('Cache usage critical - consider increasing maxSize');
+  }
+}, 30000);
 ```

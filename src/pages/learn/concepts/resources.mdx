@@ -99,10 +99,8 @@ console.log(users.data());    // undefined initially
 
 Use the `key` option to create resources that refetch when dependencies change.
 
-When combined with `invalidate`, this enables automatic data synchronization.
-
 ```jsx
-// Resource with reactive key
+// Resource with reactive key (manual mode)
 const userId = signal(1);
 
 const posts = resource(
@@ -124,6 +122,40 @@ console.log(posts.data());    // Previous data still available
 // posts.data() -> [{ id: 1, title: "Post by User 2", body: "..." }]
 // posts.status() -> 'success'
 ```
+
+### Auto-Fetch Mode
+
+Set `auto: true` to automatically refetch when key dependencies change, eliminating manual `invalidate()` calls.
+
+```jsx
+// Resource with auto-fetch enabled
+const userId = signal(1);
+
+const posts = resource(
+  id => fetch(`/api/users/${id}/posts`).then(r => r.json()),
+  { 
+    key: () => userId(),
+    auto: true // Automatically refetch when userId changes
+  }
+);
+
+// Initial fetch happens automatically when effect runs
+// No need to call posts.request()
+
+// Changing userId automatically triggers refetch
+userId(2); // Automatically fetches posts for user 2
+userId(3); // Automatically fetches posts for user 3
+
+// Access state during automatic transitions
+console.log(posts.loading()); // true during auto-refetch
+console.log(posts.data());    // Previous data available during transition
+console.log(posts.status());  // 'loading' -> 'success'
+```
+
+<div role="alert" class="alert alert-info alert-soft text-base">
+  <Icon name="ph:lightbulb" width={24} height={24} />
+  <span>Auto-fetch works with any reactive key function. The resource automatically tracks dependencies in your key function and refetches when they change.</span>
+</div>
 
 ## Resource Mutations
 
@@ -249,8 +281,6 @@ console.log(todosResource.data());      // Updated optimistically
 Handle different types of mutation errors with structured error information.
 
 ```jsx
-const UpdateProfileForm = () => {
-```jsx
 // Mutation resource with error handling
 const updateProfileResource = resource(
   async (profileData) => {
@@ -316,6 +346,7 @@ const user = resource(
   id => fetch(`/api/users/${id}`).then(r => r.json()),
   {
     key: () => userId(),
+    auto: true, // Automatically refetch when userId changes
     initialData: { name: 'Loading...', email: '' }, // Shown immediately
     cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
     onSuccess: (userData) => {
@@ -329,7 +360,8 @@ const user = resource(
   }
 );
 
-user.request();
+// With auto: true, no need to call user.request()
+// Resource automatically fetches when effect runs
 
 // Access configured data and state
 console.log(user.data()); // { name: 'Loading...', email: '' } initially
@@ -338,9 +370,8 @@ console.log(user.status()); // 'idle' -> 'loading' -> 'success'
 // After successful load:
 // user.data() -> { id: 1, name: 'John Doe', email: 'john@example.com' }
 
-// Switch users
-userId(2);
-user.invalidate(); // Refetch with new userId
+// Switch users - automatically refetches with auto: true
+userId(2); // No need to call invalidate() with auto mode
 ```
 
 ### Cache Control
@@ -403,11 +434,6 @@ console.log(data.status());  // Current status
 
 Control when resources should fetch data using the `enabled` option.
 
-```jsx
-const ConditionalData = () => {
-  const userType = signal('guest');
-  const userId = signal(null);
-  
 ```jsx
 // Conditional resource with enabled option
 const userType = signal('guest');
@@ -549,6 +575,66 @@ console.log(counterResource.status()); // 'idle'
 counterResource.get(); // Sync with server if needed
 ```
 
+### Request Deduplication
+
+Resources automatically deduplicate identical concurrent requests to reduce network load and improve performance.
+
+#### Deduplication Configuration
+
+Use the `deduplicate` option to control whether resources share concurrent requests with the same cache key.
+
+```jsx
+// Deduplication enabled (default)
+const publicDataResource = resource(
+  () => fetch('/api/public-data').then(r => r.json()),
+  { deduplicate: true } // Default behavior
+);
+
+// Deduplication disabled for sensitive operations
+const authResource = resource(
+  () => fetch('/api/auth/verify').then(r => r.json()),
+  { deduplicate: false } // Each call makes its own request
+);
+
+// Examples
+authResource.get();         // Always makes request
+authResource.get();         // Makes another request (no deduplication)
+
+publicDataResource.get();   // Makes request
+publicDataResource.get();   // Uses shared request if concurrent
+```
+
+#### Deduplication Rules
+
+Request deduplication follows specific rules:
+
+- **Same cache key + concurrent requests** = **shared network request**
+- **Different cache keys** = **separate network requests** 
+- **Sequential requests with caching** = **cache-based deduplication**
+- **Force refresh with `.request()`** = **bypasses deduplication**
+
+```jsx
+// Multiple resources with the same cache key share requests
+const userId = signal(123);
+
+const userProfileResource = resource(
+  id => fetch(`/api/users/${id}`).then(r => r.json()),
+  { key: () => userId() }
+);
+
+const userSettingsResource = resource(
+  id => fetch(`/api/users/${id}`).then(r => r.json()), 
+  { key: () => userId() }
+);
+
+// Concurrent calls share one network request
+userProfileResource.get();
+userSettingsResource.get(); // Shares request with userProfileResource
+
+// Both resources receive the same data
+console.log(userProfileResource.data() === userSettingsResource.data()); // true
+```
+
 ## Advanced Usage Patterns
 
 ### Request Lifecycle Management
@@ -583,78 +669,53 @@ console.log(data.error());   // Error information if any
 Implement robust error handling with graceful degradation.
 
 ```jsx
-const RobustErrorHandling = () => {
-  const data = resource(
-    () => fetch('/api/unreliable-endpoint').then(async response => {
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    }),
-    {
-      initialData: null,
-      onError: (error) => {
-        // Log error for debugging/monitoring
-        console.error('Resource fetch failed:', error);
-      }
+```jsx
+// Resource with robust error handling
+const data = resource(
+  () => fetch('/api/unreliable-endpoint').then(async response => {
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-  );
+    return response.json();
+  }),
+  {
+    initialData: null,
+    onError: (error) => {
+      console.error('Resource fetch failed:', error);
+    }
+  }
+);
+
+// Retry with exponential backoff
+const retryWithExponentialBackoff = () => {
+  let attempts = 0;
+  const maxAttempts = 3;
   
-  const retryWithExponentialBackoff = () => {
-    let attempts = 0;
-    const maxAttempts = 3;
+  const attempt = () => {
+    data.request();
     
-    const attempt = () => {
-      data.request();
-      
-      // Check if request succeeded after delay
-      setTimeout(() => {
-        if (data.error() && attempts < maxAttempts) {
-          attempts++;
-          const delay = Math.pow(2, attempts) * 1000; // 2s, 4s, 8s
-          setTimeout(attempt, delay);
-        }
-      }, 100);
-    };
-    
-    attempt();
+    // Check if request succeeded after delay
+    setTimeout(() => {
+      if (data.error() && attempts < maxAttempts) {
+        attempts++;
+        const delay = Math.pow(2, attempts) * 1000; // 2s, 4s, 8s
+        console.log(`Retrying in ${delay}ms (attempt ${attempts})`);
+        setTimeout(attempt, delay);
+      }
+    }, 100);
   };
   
-  return (
-    <div>
-      <h2>Robust Error Handling</h2>
-      
-      <button onClick={() => data.request()}>Load Data</button>
-      <button onClick={retryWithExponentialBackoff}>Retry with Backoff</button>
-      
-      {data.loading() && (
-        <div class="loading">
-          <p>Loading data...</p>
-          <button onClick={() => data.abort()}>Cancel</button>
-        </div>
-      )}
-      
-      {data.error() && (
-        <div class="error-state">
-          <h3>Something went wrong</h3>
-          <p>We couldn't load the data you requested.</p>
-          <details>
-            <summary>Error details</summary>
-            <pre>{String(data.error())}</pre>
-          </details>
-          <button onClick={() => data.request()}>Try Again</button>
-        </div>
-      )}
-      
-      {data.data() && data.status() === 'success' && (
-        <div class="success-state">
-          <h3>Data loaded successfully!</h3>
-          <pre>{JSON.stringify(data.data(), null, 2)}</pre>
-        </div>
-      )}
-    </div>
-  );
+  attempt();
 };
+
+// Usage
+data.request(); // Initial attempt
+console.log(data.loading()); // true
+
+// If it fails, retry with backoff
+if (data.error()) {
+  retryWithExponentialBackoff();
+}
 ```
 
 ### Resource Composition Patterns
@@ -711,169 +772,6 @@ const switchUser = (newId) => {
 console.log(user.data());      // User data when loaded
 console.log(userPosts.data()); // Posts when loaded
 console.log(categories.data()); // Cached categories
-```
-
-## Request Deduplication
-
-Resources automatically deduplicate identical concurrent requests to reduce network load and improve performance.
-
-### Automatic Request Sharing
-
-Multiple resources with the same cache key will share a single network request when triggered simultaneously.
-
-```jsx
-// Multiple resources with the same cache key
-const userId = signal(123);
-
-// Two different resources that fetch the same user data
-const userProfileResource = resource(
-  id => fetch(`/api/users/${id}`).then(r => r.json()),
-  { key: () => userId() }
-);
-
-const userSettingsResource = resource(
-  id => fetch(`/api/users/${id}`).then(r => r.json()), 
-  { key: () => userId() }
-);
-
-// Even though we trigger both resources simultaneously,
-// only ONE network request is made due to deduplication
-userProfileResource.get();
-userSettingsResource.get();
-
-// Both resources will receive the same data when the 
-// shared request completes
-console.log(userProfileResource.loading()); // true
-console.log(userSettingsResource.loading()); // true
-
-// After completion, both have the same data
-// userProfileResource.data() === userSettingsResource.data()
-```
-
-### Deduplication Rules
-
-Request deduplication follows specific rules based on cache keys and timing:
-
-- **Same cache key + concurrent requests** = **shared network request**
-- **Different cache keys** = **separate network requests** 
-- **Sequential requests with caching** = **cache-based deduplication**
-- **Force refresh with `.request()`** = **bypasses deduplication**
-
-```jsx
-// Deduplication control examples
-const itemId = signal(1);
-
-const resource1 = resource(
-  id => fetch(`/api/items/${id}`).then(r => r.json()),
-  { key: () => itemId(), deduplicate: true } // default: true
-);
-
-const resource2 = resource(
-  id => fetch(`/api/items/${id}`).then(r => r.json()),
-  { key: () => itemId(), deduplicate: true }
-);
-
-const resource3 = resource(
-  id => fetch(`/api/items/${id}`).then(r => r.json()),
-  { key: () => itemId(), deduplicate: false } // deduplication disabled
-);
-
-// These two will share one request
-resource1.get();
-resource2.get(); // Shares request with resource1
-
-// This one makes its own request (deduplication disabled)
-resource3.get(); // Makes separate request
-
-// Force requests bypass deduplication entirely
-resource1.request(); // Makes new request even if others are pending
-
-// Check loading states
-console.log(resource1.loading()); // Loading state
-console.log(resource2.loading()); // Same as resource1 due to sharing  
-console.log(resource3.loading()); // Independent loading state
-```
-
-### Performance Benefits
-
-Request deduplication provides significant performance improvements:
-
-- **Reduced Network Traffic**: Multiple components requesting the same data generate only one request
-- **Lower Server Load**: Fewer duplicate requests to your backend
-- **Better User Experience**: Consistent loading states across components
-- **Efficient Resource Usage**: Less memory and CPU usage from duplicate operations
-
-```jsx
-const PerformanceExample = () => {
-  const userId = signal(1);
-  
-  // Multiple components that need the same user data
-  const UserAvatar = () => {
-    const user = resource(
-      id => fetch(`/api/users/${id}`).then(r => r.json()),
-      { key: () => userId() }
-    );
-    
-    user.get();
-    return <img src={user.data()?.avatar} alt="Avatar" />;
-  };
-  
-  const UserName = () => {
-    const user = resource(
-      id => fetch(`/api/users/${id}`).then(r => r.json()),
-      { key: () => userId() }
-    );
-    
-    user.get();
-    return <span>{user.data()?.name}</span>;
-  };
-  
-  const UserEmail = () => {
-    const user = resource(
-      id => fetch(`/api/users/${id}`).then(r => r.json()),
-      { key: () => userId() }
-    );
-    
-    user.get();
-    return <span>{user.data()?.email}</span>;
-  };
-
-  // Even though three components each call user.get(),
-  // only ONE network request is made due to deduplication
-  return (
-    <div class="user-card">
-      <UserAvatar />
-      <UserName />
-      <UserEmail />
-    </div>
-  );
-};
-```
-
-### Controlling Deduplication
-
-You can control deduplication behavior per resource when needed.
-
-```jsx
-// Control deduplication behavior per resource
-// Sensitive operations might want to disable deduplication
-const authResource = resource(
-  () => fetch('/api/auth/verify').then(r => r.json()),
-  { deduplicate: false } // Each call makes its own request
-);
-
-// Public data can safely use deduplication
-const publicDataResource = resource(
-  () => fetch('/api/public-data').then(r => r.json()),
-  { deduplicate: true } // Default behavior
-);
-
-// Examples
-authResource.get();         // Always makes request
-authResource.get();         // Makes another request (no deduplication)
-
-publicDataResource.get();   // Makes request
-publicDataResource.get();   // Uses shared request if concurrent
 ```
 
 ## Internal Mechanisms
